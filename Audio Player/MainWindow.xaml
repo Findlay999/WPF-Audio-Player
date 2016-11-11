@@ -1,0 +1,250 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Audio_Player"
+        x:Class="Audio_Player.MainWindow"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="535" Width="500" SizeChanged="Window_SizeChanged" Closed="Window_Closed">
+      
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10*"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="50"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <MediaElement Name="ms" MediaEnded="ms_MediaEnded" MediaOpened="MyMediaElement_MediaOpened" LoadedBehavior="Play"/>
+
+        <Grid x:Name="TopPanel"  Grid.Row="0" Grid.Column="0" Background="LightGray">
+            <Border BorderBrush="Gray" BorderThickness="0, 0, 0, 1" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"/>
+            <Button Width="50" HorizontalAlignment="Left" Grid.Column="0" Click="RightPanel_Button_Click"  BorderThickness="0" Cursor="Hand" Background="{x:Null}" >
+                <Image Source="Resources/Menu_icon.png"/>
+            </Button>
+        </Grid>
+
+        <Grid x:Name="MainPanel" Grid.Row="1" Grid.RowSpan="1" Grid.Column="1">
+            <Grid.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFF0F0F0" Offset="0"/>
+                    <GradientStop Color="#FF878080" Offset="0.474"/>
+                </LinearGradientBrush>
+            </Grid.Background>
+
+            <Grid Name="AddFolder" Visibility="Visible">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="20, 20, 0, 0">
+                    <Button Width="50" Content="+" BorderThickness="0" FontSize="30" Cursor="Hand" Style="{StaticResource RoundedButtonStylePlus}" Click="AddPath_Click"/>
+                    <TextBlock Margin="20,0,0,0" Text="Добавить расположение" VerticalAlignment="Center" FontSize="20" FontWeight="DemiBold"/>
+                </StackPanel>
+
+                <ListBox Grid.Row="1" Margin="50,30,10,0"  BorderThickness="0" Name="ListPaths" Background="{x:Null}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Width="35" BorderThickness="0" Content="{Binding}" Cursor="Hand" FontSize="20" Style="{StaticResource RoundedButtonStyleMinus}" Click="RemovePath_Click"/>
+                                <TextBlock Margin="10,0,0,0" Text="{Binding}" VerticalAlignment="Center" FontSize="15" FontWeight="DemiBold"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+
+            <Grid Name="PlayGrid" Visibility="Hidden">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+
+                <ListBox VerticalAlignment="Stretch" BorderThickness="0" Grid.Row="1" Name="Play" Background="#FF878080" DataContext="{Binding}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel>
+                                <StackPanel.Style>
+                                    <Style TargetType="StackPanel">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ElementName=BottomPanel, Path=Visibility}" Value="Visible">
+                                                <Setter Property="Margin" Value="0, 0, 0, 50"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ElementName=BottomPanel, Path=Visibility}" Value="Hidden">
+                                                <Setter Property="Margin" Value="0, 0, 0, 0"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </StackPanel.Style>
+                            </StackPanel>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="2, 5, 2, 5" DataContext="{Binding}" Cursor="Hand" MouseLeftButtonDown="Audio_MouseLeftButtonDown" Width="{Binding ElementName=Play, Path=ActualWidth}">
+                                <StackPanel Orientation="Vertical" Background="{x:Null}">
+                                    <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="DemiBold"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Margin="0, 0, 5, 0" Text="{Binding Singer}"  FontSize="12" FontWeight="Regular"/>
+                                        <TextBlock Margin="5, 0, 0, 0" Text="{Binding Album}" FontSize="12" FontWeight="Regular"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <TextBlock Background="{x:Null}" VerticalAlignment="Center" Grid.Column="1" Margin="0, 0, 35, 0" TextAlignment="Right" Text="{Binding Duration}" FontSize="13" FontWeight="DemiBold"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <Grid Name="TopPlayGrid">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="0.1*"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FF878080" Offset="0"/>
+                            <GradientStop Color="White" Offset="0.5"/>
+                            <GradientStop Color="#FF878080" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Grid.Background>
+
+                    <Image Margin="15, 30, 15, 30" Source="Resources/NoImg.jpg" Name="Img_Audio" HorizontalAlignment="Center">
+                        <Image.Effect>
+                            <DropShadowEffect/>
+                        </Image.Effect>
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=TitleSizer, Path=Visibility}" Value="Hidden">
+                                        <Setter Property="Grid.ColumnSpan" Value="4"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=TitleSizer, Path=Visibility}" Value="Visible">
+                                        <Setter Property="Grid.ColumnSpan" Value="1"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+
+                    <Grid  Name="TitleSizer" Grid.Column="2" VerticalAlignment="Bottom"  Margin="0, 0, 15, 30">
+                        <Viewbox Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Singer}" FontWeight="Regular"/>
+                                    <TextBlock Text="{Binding Album}" Margin="10,0,0,0" FontWeight="Regular"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Viewbox>
+                    </Grid>
+                </Grid>
+
+            </Grid>
+
+        </Grid>
+
+        <Grid x:Name="RightPanel" Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Background="LightGray" HorizontalAlignment="Left" Width="50" Opacity="1" Panel.ZIndex="1">
+            <Grid.Effect>
+                <DropShadowEffect Opacity="0.5" Direction="90"/>
+            </Grid.Effect>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="50"/>
+            </Grid.RowDefinitions>
+
+
+            <Button Grid.Row="0" Margin="0, 5, 0, 5" BorderThickness="0" Background="{x:Null}" Name="PlayList" Click="PlayList_Click">
+                <Image Source="Resources/add.png"/>
+            </Button>
+
+            <Button Grid.Row="1" Margin="0, 5, 0, 5" BorderThickness="0" Background="{x:Null}" Name="AddToFolder" Click="AddToFolder_Click">
+                <Image Source="Resources/add.png"/>
+            </Button>
+        </Grid>
+
+        <Grid x:Name="BottomPanel" Visibility="Hidden" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Height="50" Panel.ZIndex="0" Opacity="0.9">
+            <Grid.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF898989" Offset="0"/>
+                    <GradientStop Color="White" Offset="0.5"/>
+                    <GradientStop Color="#FF898989" Offset="1"/>
+                </LinearGradientBrush>
+            </Grid.Background>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" MinWidth="100"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="250" MinWidth="250"/>
+                </Grid.ColumnDefinitions>
+    
+                <StackPanel Name="BotButtons" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Stretch" Panel.ZIndex="1" Background="{Binding ElementName=BottomPanel, Path=Background}">
+                    <Button Width="30" Background="{x:Null}" Margin="5, 10, 5, 10" Click="PrevAudio_Click" BorderThickness="0">
+                        <Image Source="Resources\PrevB.png"/>
+                    </Button>
+                    <Button Width="30" Margin="5, 10, 5, 10" DataContext="{Binding}" Name="PlayButton" Background="{x:Null}" Click="Play_Click" BorderThickness="0">
+                        <Image Source="Resources\Pause.png"/>
+                    </Button>
+                    <Button Width="30" Margin="5, 10, 5, 10" Background="{x:Null}" Click="NextAudio_Click" BorderThickness="0">
+                        <Image Source="Resources\NextB.png"/>
+                    </Button>
+                    <ToggleButton IsChecked="{Binding ElementName=pup, Path=IsOpen}" Width="30"  Height="30" Margin="5" Background="{x:Null}" BorderThickness="0">
+                        <Image Source="Resources\VolumeB.png"/>
+                    </ToggleButton>
+                    <ToggleButton Width="30" Name="RepeatButt" Content="O" Margin="5, 10, 5, 10"/>
+                    <ToggleButton Width="30" Name="RandomButt" Content="->" Margin="5, 10, 5, 10"/>
+                </StackPanel>
+
+                <Popup Placement="Right" AllowsTransparency="True" Visibility="Visible" Panel.ZIndex="5" PopupAnimation="Fade" x:Name="pup" VerticalOffset="-85" HorizontalOffset="-205">
+                    <Grid Width="200" Height="80" Opacity="0.8" Background="White" Margin="0,0,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="40"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="150"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Margin="10,0,0,0" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Foreground="Black" Text="Volume :"/>
+                        <Slider Margin="10,0,10,0" Style="{StaticResource Horizontal_Slider}" Grid.Row="1" Grid.Column="1" Maximum="1" Value="{Binding ElementName=ms, Path=Volume, Mode=TwoWay}" VerticalAlignment="Center" BorderBrush="{x:Null}" Foreground="Black" OpacityMask="Black"/>
+
+                        <TextBlock Margin="10,0,0,0" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Foreground="Black" Text="Balance :"/>
+                        <Slider Margin="10,0,10,0" Style="{StaticResource Horizontal_Slider}" Grid.Row="0" Grid.Column="1" Maximum="1" Value="{Binding ElementName=ms, Path=Balance, Mode=TwoWay}" VerticalAlignment="Center" BorderBrush="{x:Null}" Foreground="Black" OpacityMask="Black"/>
+
+                    </Grid>
+                </Popup>
+                
+                <Slider Style="{StaticResource Horizontal_Slider}" MouseLeftButtonUp="timeSlider_MouseLeftButtonUp"  IsMoveToPointEnabled="True" Value="100" Margin="20, 0, 20, 0" Name="AudioSlider" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Visibility="Hidden"/>
+
+                <StackPanel Grid.Column="0" Name="BottomInfo" Orientation="Vertical" HorizontalAlignment="Left"  Margin="55, 0, 0, 0" VerticalAlignment="Center" Panel.ZIndex="0">
+                    <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Singer}" FontWeight="Regular"/>
+                        <TextBlock Text="{Binding Album}" Margin="10,0,0,0" FontWeight="Regular"/>
+                    </StackPanel>
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Visibility, ElementName=AudioSlider}" Value="Visible">
+                                    <Setter Property="Grid.ColumnSpan" Value="1"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding ElementName=AudioSlider, Path=Visibility}" Value="Hidden">
+                                    <Setter Property="Grid.ColumnSpan" Value="3"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
+                </StackPanel>
+                
+            </Grid>
+        </Grid>
+
+    </Grid>
+</Window>
