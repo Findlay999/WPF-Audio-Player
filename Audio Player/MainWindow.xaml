@@ -6,13 +6,15 @@
         xmlns:local="clr-namespace:Audio_Player"
         x:Class="Audio_Player.MainWindow"
         mc:Ignorable="d"
-        Title="MainWindow" Height="535" Width="500" SizeChanged="Window_SizeChanged" Closed="Window_Closed">
-      
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="10*"/>
-        </Grid.RowDefinitions>
+        Title="MainWindow" Height="535" Width="500" SizeChanged="Window_SizeChanged" Closed="Window_Closed" Name="MainWin">
 
+
+    <Window.Resources>
+        <local:WidthToBoolConv x:Key="WidthToBool"/>
+    </Window.Resources>
+
+
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="50"/>
             <ColumnDefinition Width="*"/>
@@ -27,7 +29,7 @@
             </Button>
         </Grid>
 
-        <Grid x:Name="MainPanel" Grid.Row="1" Grid.RowSpan="1" Grid.Column="1">
+        <Grid x:Name="MainPanel" Grid.Column="1">
             <Grid.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FFF0F0F0" Offset="0"/>
@@ -64,8 +66,8 @@
                     <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
 
-                <ListBox VerticalAlignment="Stretch" BorderThickness="0" Grid.Row="1" Name="Play" Background="#FF878080" DataContext="{Binding}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                    <ListBox.ItemsPanel>
+                <ListBox BorderThickness="0" Grid.Row="1" Name="Play" Background="#FF7E7E7E" DataContext="{Binding}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="True"> 
+                <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel>
                                 <StackPanel.Style>
@@ -85,16 +87,24 @@
                     </ListBox.ItemsPanel>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <Grid Margin="2, 5, 2, 5" DataContext="{Binding}" Cursor="Hand" MouseLeftButtonDown="Audio_MouseLeftButtonDown" Width="{Binding ElementName=Play, Path=ActualWidth}">
-                                <StackPanel Orientation="Vertical" Background="{x:Null}">
-                                    <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="DemiBold"/>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Margin="0, 0, 5, 0" Text="{Binding Singer}"  FontSize="12" FontWeight="Regular"/>
-                                        <TextBlock Margin="5, 0, 0, 0" Text="{Binding Album}" FontSize="12" FontWeight="Regular"/>
+                            <ListView Margin="0, 2, 0, 2" BorderBrush="#FF0F0B0B" BorderThickness="3, 1, 3, 1" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                <ListView.Background>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="#FF858585" Offset="1"/>
+                                        <GradientStop Color="#FFC3C3C3" Offset="0"/>
+                                    </LinearGradientBrush>
+                                </ListView.Background>
+                                <Grid Margin="5, 5, 0, 5" DataContext="{Binding}" Cursor="Hand" MouseLeftButtonDown="Audio_MouseLeftButtonDown" Width="{Binding ElementName=Play, Path=ActualWidth}">
+                                    <StackPanel Orientation="Vertical" Background="{x:Null}">
+                                        <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="DemiBold"/>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Margin="0, 0, 5, 0" Text="{Binding Singer}"  FontSize="12" FontWeight="Regular"/>
+                                            <TextBlock Margin="5, 0, 0, 0" Text="{Binding Album}" FontSize="12" FontWeight="Regular"/>
+                                        </StackPanel>
                                     </StackPanel>
-                                </StackPanel>
-                                <TextBlock Background="{x:Null}" VerticalAlignment="Center" Grid.Column="1" Margin="0, 0, 35, 0" TextAlignment="Right" Text="{Binding Duration}" FontSize="13" FontWeight="DemiBold"/>
-                            </Grid>
+                                    <TextBlock Background="{x:Null}" VerticalAlignment="Center" Grid.Column="1" Margin="0, 0, 60, 0" TextAlignment="Right" Text="{Binding Duration}" FontSize="13" FontWeight="DemiBold"/>
+                                </Grid>
+                            </ListView>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
@@ -108,9 +118,9 @@
                     </Grid.ColumnDefinitions>
                     <Grid.Background>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                            <GradientStop Color="#FF878080" Offset="0"/>
-                            <GradientStop Color="White" Offset="0.5"/>
-                            <GradientStop Color="#FF878080" Offset="1"/>
+                            <GradientStop Color="#FF7E7E7E" Offset="0"/>
+                            <GradientStop Color="#FFD6D6D6" Offset="0.5"/>
+                            <GradientStop Color="#FF7E7E7E" Offset="1"/>
                         </LinearGradientBrush>
                     </Grid.Background>
 
@@ -168,7 +178,7 @@
             </Button>
         </Grid>
 
-        <Grid x:Name="BottomPanel" Visibility="Hidden" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Height="50" Panel.ZIndex="0" Opacity="0.9">
+        <Grid x:Name="BottomPanel" Visibility="Hidden" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Height="50" Panel.ZIndex="2" Opacity="0.9">
             <Grid.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FF898989" Offset="0"/>

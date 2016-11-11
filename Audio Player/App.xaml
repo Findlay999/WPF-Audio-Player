@@ -4,7 +4,7 @@
              xmlns:local="clr-namespace:Audio_Player"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        
+
         <Style x:Key="SliderRepeatButton" TargetType="RepeatButton">
                 <Setter Property="SnapsToDevicePixels" Value="true" />
                 <Setter Property="OverridesDefaultStyle" Value="true" />

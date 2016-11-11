@@ -35,6 +35,33 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Nevron.Nov.Barcode">
+      <HintPath>C:\Program Files (x86)\Nevron Software\Nevron Open Vision 2016.2\Bin\Win\Nevron.Nov.Barcode.dll</HintPath>
+    </Reference>
+    <Reference Include="Nevron.Nov.Chart">
+      <HintPath>C:\Program Files (x86)\Nevron Software\Nevron Open Vision 2016.2\Bin\Win\Nevron.Nov.Chart.dll</HintPath>
+    </Reference>
+    <Reference Include="Nevron.Nov.Diagram">
+      <HintPath>C:\Program Files (x86)\Nevron Software\Nevron Open Vision 2016.2\Bin\Win\Nevron.Nov.Diagram.dll</HintPath>
+    </Reference>
+    <Reference Include="Nevron.Nov.Grid">
+      <HintPath>C:\Program Files (x86)\Nevron Software\Nevron Open Vision 2016.2\Bin\Win\Nevron.Nov.Grid.dll</HintPath>
+    </Reference>
+    <Reference Include="Nevron.Nov.Host.Wpf">
+      <HintPath>C:\Program Files (x86)\Nevron Software\Nevron Open Vision 2016.2\Bin\Win\Nevron.Nov.Host.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="Nevron.Nov.Presentation">
+      <HintPath>C:\Program Files (x86)\Nevron Software\Nevron Open Vision 2016.2\Bin\Win\Nevron.Nov.Presentation.dll</HintPath>
+    </Reference>
+    <Reference Include="Nevron.Nov.Schedule">
+      <HintPath>C:\Program Files (x86)\Nevron Software\Nevron Open Vision 2016.2\Bin\Win\Nevron.Nov.Schedule.dll</HintPath>
+    </Reference>
+    <Reference Include="Nevron.Nov.Text">
+      <HintPath>C:\Program Files (x86)\Nevron Software\Nevron Open Vision 2016.2\Bin\Win\Nevron.Nov.Text.dll</HintPath>
+    </Reference>
+    <Reference Include="Nevron.Nov.WpfControls">
+      <HintPath>C:\Program Files (x86)\Nevron Software\Nevron Open Vision 2016.2\Bin\Win\Nevron.Nov.WpfControls.dll</HintPath>
+    </Reference>
     <Reference Include="policy.2.0.taglib-sharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=db62eba44689b5b0, processorArchitecture=MSIL">
       <HintPath>..\packages\taglib.2.1.0.0\lib\policy.2.0.taglib-sharp.dll</HintPath>
       <Private>True</Private>
