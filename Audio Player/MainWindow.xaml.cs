@@ -26,27 +26,6 @@ namespace Audio_Player
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     /// 
-    class WidthToBoolConv : IValueConverter
-    {
-        public object Convert(object value, Type targetType,
-            object parameter, CultureInfo culture)
-        {
-            if ((double)value > 850)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
-
-        public object ConvertBack(object value, Type targetType,
-            object parameter, CultureInfo culture)
-        {
-            return null;
-        }
-    }
 
     public partial class MainWindow : Window
     {
@@ -181,6 +160,8 @@ namespace Audio_Player
             Playing = true;
             ms.Play();
             CurrentIndex = playList.AudioPathList.IndexOf(audioContext);
+
+            (PlayButton.Content as Image).Source = LoadImage(@"C:\Users\Євгеній\Documents\Pause.png", false);
 
             TagLib.File Ds = TagLib.File.Create(audioContext.DirectoryName + "\\" + audioContext.Name);
             if (Ds.Tag.Pictures.Length > 0)

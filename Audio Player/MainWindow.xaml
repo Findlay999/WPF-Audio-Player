@@ -6,13 +6,7 @@
         xmlns:local="clr-namespace:Audio_Player"
         x:Class="Audio_Player.MainWindow"
         mc:Ignorable="d"
-        Title="MainWindow" Height="535" Width="500" SizeChanged="Window_SizeChanged" Closed="Window_Closed" Name="MainWin">
-
-
-    <Window.Resources>
-        <local:WidthToBoolConv x:Key="WidthToBool"/>
-    </Window.Resources>
-
+        Title="Player" Height="535" Width="500" SizeChanged="Window_SizeChanged" Closed="Window_Closed">
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -48,7 +42,7 @@
                     <TextBlock Margin="20,0,0,0" Text="Добавить расположение" VerticalAlignment="Center" FontSize="20" FontWeight="DemiBold"/>
                 </StackPanel>
 
-                <ListBox Grid.Row="1" Margin="50,30,10,0"  BorderThickness="0" Name="ListPaths" Background="{x:Null}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListBox Grid.Row="1" BorderThickness="0" Name="ListPaths" Background="{x:Null}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -57,6 +51,19 @@
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
+
+                    <ListBox.Style>
+                        <Style TargetType="ListBox">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=BottomPanel, Path=Visibility}" Value="Hidden">
+                                    <Setter Property="Margin" Value="50,30,10,0"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding ElementName=BottomPanel, Path=Visibility}" Value="Visible">
+                                    <Setter Property="Margin" Value="50,30,10,50"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListBox.Style>
                 </ListBox>
             </Grid>
 
@@ -232,8 +239,8 @@
                 </Popup>
                 
                 <Slider Style="{StaticResource Horizontal_Slider}" MouseLeftButtonUp="timeSlider_MouseLeftButtonUp"  IsMoveToPointEnabled="True" Value="100" Margin="20, 0, 20, 0" Name="AudioSlider" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Visibility="Hidden"/>
-
-                <StackPanel Grid.Column="0" Name="BottomInfo" Orientation="Vertical" HorizontalAlignment="Left"  Margin="55, 0, 0, 0" VerticalAlignment="Center" Panel.ZIndex="0">
+                
+                <StackPanel Grid.Column="0" Name="BottomInfo" Orientation="Vertical" HorizontalAlignment="Left"  Margin="5, 0, 0, 0" VerticalAlignment="Center" Panel.ZIndex="0">
                     <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Singer}" FontWeight="Regular"/>

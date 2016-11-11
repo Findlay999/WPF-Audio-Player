@@ -3,8 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Audio_Player"
              StartupUri="MainWindow.xaml">
-    <Application.Resources>
 
+    <Application.Resources>
         <Style x:Key="SliderRepeatButton" TargetType="RepeatButton">
                 <Setter Property="SnapsToDevicePixels" Value="true" />
                 <Setter Property="OverridesDefaultStyle" Value="true" />
