@@ -1,4 +1,4 @@
-# WPF-Audio-Player (Alfa version)
+# WPF-Audio-Player (alpha version)
 WPF audio player
 
 #Resources
