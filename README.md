@@ -1,5 +1,5 @@
 # WPF-Audio-Player (alpha version)
-Audio player is writting by using XAML + C#
+The WPF-based audio player ( C# + XAML ).
 
 #Resources
 TagLib - https://github.com/taglib/taglib
