@@ -36,42 +36,44 @@ namespace Audio_Player
 
         private TimeSpan TotalTime;
 
-
         public MainWindow()
         {
             InitializeComponent();
-            ListPaths.ItemsSource = new List<string>(Paths);
-            ms.LoadedBehavior = MediaState.Manual;
-
-            BinaryFormatter formatter = new BinaryFormatter();
-            using (FileStream fs = new FileStream("P_S.dat", FileMode.OpenOrCreate))
-            {
-                if (fs.Length != 0)
-                    Paths = (List<string>)formatter.Deserialize(fs);
-            }
-            ListPaths.ItemsSource = new List<string>(Paths);
-
-            using (FileStream fs = new FileStream("P_List.dat", FileMode.OpenOrCreate))
-            {
-                if(fs.Length != 0)
-                 playList.AudioPathList = (List<Audio>)formatter.Deserialize(fs);
-            }
-
-            ListPaths.ItemsSource = new List<string>(Paths);
-            Play.ItemsSource = new List<Audio>(playList.AudioPathList);
-
-
+            DeserializeData();
         }
 
         private void MyMediaElement_MediaOpened(object sender, RoutedEventArgs e)
         {
             TotalTime = ms.NaturalDuration.TimeSpan;
-
-            // Create a timer that will update the counters and the time slider
             DispatcherTimer timerVideoTime = new DispatcherTimer();
             timerVideoTime.Interval = TimeSpan.FromSeconds(1);
             timerVideoTime.Tick += new EventHandler(timer_Tick);
             timerVideoTime.Start();
+        }
+
+
+        private void ms_MediaEnded(object sender, RoutedEventArgs e)
+        {
+            Random rand = new Random();
+            if (RandomButt.IsChecked == true)
+            {
+                int[] Mas = Enumerable.Range(0, playList.AudioPathList.Count).Where(x => !playList.AudioPathList[x].IsPlayed).ToArray();
+                if (Mas.Length == 0)
+                {
+                    playList.AudioPathList.Select(x => x.IsPlayed = false);
+                    ChangeAudio(playList.AudioPathList[Mas[rand.Next(0, Mas.Length)]]);
+                }
+            }
+            else if (RepeatButt.IsChecked == true)
+            {
+                ms.Position = TimeSpan.Zero;
+                ms.Play();
+            }
+            else
+            {
+                if (CurrentIndex < playList.AudioPathList.Count - 1)
+                    ChangeAudio(playList.AudioPathList[++CurrentIndex]);
+            }
         }
 
         void timer_Tick(object sender, EventArgs e)
@@ -91,24 +93,6 @@ namespace Audio_Player
             {
                 ms.Position = TimeSpan.FromSeconds(TotalTime.TotalSeconds * AudioSlider.Value / 10);
             }
-        }
-
-        private void RightPanel_Button_Click(object sender, RoutedEventArgs e)
-        {
-            double startVal = 50;
-            double finalVal = 250;
-
-            DoubleAnimation r_panelAnim = new DoubleAnimation();
-
-            if (RightPanel.ActualWidth > 50)
-            {
-                finalVal = 50;
-                startVal = RightPanel.ActualWidth;
-            }        
-            r_panelAnim.To = finalVal;
-            r_panelAnim.From = startVal;
-            r_panelAnim.Duration = new Duration(TimeSpan.FromSeconds(0.7));
-            RightPanel.BeginAnimation(WidthProperty, r_panelAnim);
         }
 
         private void RemovePath_Click(object sender, RoutedEventArgs e)
@@ -147,6 +131,95 @@ namespace Audio_Player
             ChangeAudio(audioContext);
         }
 
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if(this.ActualWidth < 850)
+            {
+                TitleSizer.Visibility = Visibility.Hidden;
+                AudioSlider.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                TitleSizer.Visibility = Visibility.Visible;
+                AudioSlider.Visibility = Visibility.Visible;
+                BotButtons.Children[3].Visibility = Visibility.Visible;
+            }
+
+            if(this.ActualWidth < 600)
+            {
+                BotButtons.Children[5].Visibility = Visibility.Collapsed;
+                BotButtons.Children[4].Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                BotButtons.Children[5].Visibility = Visibility.Visible;
+                BotButtons.Children[4].Visibility = Visibility.Visible;
+            }
+        }
+
+
+        private void PlayList_Click(object sender, RoutedEventArgs e)
+        {
+            AddFolder.Visibility = Visibility.Collapsed;
+            PlayGrid.Visibility = Visibility.Visible;
+            OpacityAnim(PlayGrid, sender);
+        }
+
+        private void AddToFolder_Click(object sender, RoutedEventArgs e)
+        {
+            AddFolder.Visibility = Visibility.Visible;
+            PlayGrid.Visibility = Visibility.Collapsed;
+            RideAnim(AddFolder, sender);
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            using (FileStream fs = new FileStream("P_S.dat", FileMode.OpenOrCreate))
+            {
+                formatter.Serialize(fs, Paths);
+            }
+            using (FileStream fs = new FileStream("P_List.dat", FileMode.OpenOrCreate))
+            {
+                formatter.Serialize(fs, playList.AudioPathList);
+            }
+        }
+
+        public BitmapImage LoadImage(string text, bool decode)
+        {
+            BitmapImage bitmap = new BitmapImage();
+            bitmap.BeginInit();
+            bitmap.UriSource = new Uri(text, UriKind.Absolute);
+            bitmap.CacheOption = BitmapCacheOption.OnLoad;
+            if (decode)
+            {
+                bitmap.DecodePixelWidth = 200;
+                bitmap.DecodePixelHeight = 200;
+            }
+            bitmap.EndInit();
+
+            return bitmap;
+        }
+
+        private void DeserializeData()
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            using (FileStream fs = new FileStream("P_S.dat", FileMode.OpenOrCreate))
+            {
+                if (fs.Length != 0)
+                    Paths = (List<string>)formatter.Deserialize(fs);
+            }
+            ListPaths.ItemsSource = new List<string>(Paths);
+
+            using (FileStream fs = new FileStream("P_List.dat", FileMode.OpenOrCreate))
+            {
+                if (fs.Length != 0)
+                    playList.AudioPathList = (List<Audio>)formatter.Deserialize(fs);
+            }
+
+            ListPaths.ItemsSource = new List<string>(Paths);
+            Play.ItemsSource = new List<Audio>(playList.AudioPathList);
+        }
 
         private void ChangeAudio(Audio audioContext)
         {
@@ -181,121 +254,43 @@ namespace Audio_Player
                 s.Close();
                 // Create a System.Windows.Controls.Image control
                 Img_Audio.Source = bitmap;
+               
                 GC.Collect();
             }
             else
             {
-                Img_Audio.Source = LoadImage(@"pack://application:,,,/Resources/NoImg.jpg", true );
+                Img_Audio.Source = LoadImage(@"pack://application:,,,/Resources/NoImg.jpg", true);
             }
             BottomInfo.DataContext = audioContext;
         }
 
-        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            if(this.ActualWidth < 850)
-            {
-                TitleSizer.Visibility = Visibility.Hidden;
-                AudioSlider.Visibility = Visibility.Hidden;
-            }
-            else
-            {
-                TitleSizer.Visibility = Visibility.Visible;
-                AudioSlider.Visibility = Visibility.Visible;
-                BotButtons.Children[3].Visibility = Visibility.Visible;
-            }
 
-            if(this.ActualWidth < 600)
+        private void OpacityAnim(Grid elem, object sender)
+        {
+            DoubleAnimation Anim = new DoubleAnimation();
+            (sender as Button).IsHitTestVisible = false;
+            Anim.Completed += delegate
             {
-                BotButtons.Children[5].Visibility = Visibility.Collapsed;
-                BotButtons.Children[4].Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                BotButtons.Children[5].Visibility = Visibility.Visible;
-                BotButtons.Children[4].Visibility = Visibility.Visible;
-            }
+                (sender as Button).IsHitTestVisible = true;
+            };
+            Anim.From = 0;
+            Anim.To = 1;
+            Anim.Duration = new Duration(TimeSpan.FromSeconds(1));
+            elem.BeginAnimation(OpacityProperty, Anim);
         }
 
-
-        private void PlayList_Click(object sender, RoutedEventArgs e)
+        private void RideAnim(Grid elem, object sender)
         {
-            AddFolder.Visibility = Visibility.Collapsed;
-            PlayGrid.Visibility = Visibility.Visible;
-        }
-
-        private void AddToFolder_Click(object sender, RoutedEventArgs e)
-        {
-            AddFolder.Visibility = Visibility.Visible;
-            PlayGrid.Visibility = Visibility.Collapsed;
-        }
-
-        private void Play_Click(object sender, RoutedEventArgs e)
-        {
-            if(Playing)
+            ThicknessAnimation Anim = new ThicknessAnimation();
+            (sender as Button).IsHitTestVisible = false; 
+            Anim.Completed += delegate
             {
-                ms.Pause();
-                Playing = false;
-                (PlayButton.Content as Image).Source = LoadImage(@"C:\Users\Євгеній\Documents\PlayB.png", false);
-            }
-            else
-            {
-                ms.Play();
-                Playing = true;
-                (PlayButton.Content as Image).Source = LoadImage(@"C:\Users\Євгеній\Documents\Pause.png", false);
-            }
-        }
-
-        public BitmapImage LoadImage(string text, bool decode)
-        {
-            BitmapImage bitmap = new BitmapImage();
-            bitmap.BeginInit();
-            bitmap.UriSource = new Uri(text, UriKind.Absolute);
-            bitmap.CacheOption = BitmapCacheOption.OnLoad;
-            if (decode)
-            {
-                bitmap.DecodePixelWidth = 200;
-                bitmap.DecodePixelHeight = 200;
-            }
-            bitmap.EndInit();
-
-            return bitmap;
-        }
-
-        private void ms_MediaEnded(object sender, RoutedEventArgs e)
-        {
-            Random rand = new Random();
-            if(RandomButt.IsChecked == true)
-            {
-                int[] Mas = Enumerable.Range(0, playList.AudioPathList.Count).Where(x => !playList.AudioPathList[x].IsPlayed).ToArray();
-                if(Mas.Length == 0)
-                {
-                    playList.AudioPathList.Select(x => x.IsPlayed = false);
-                    ChangeAudio(playList.AudioPathList[Mas[rand.Next(0, Mas.Length)]]);
-                }
-            }
-            else if (RepeatButt.IsChecked == true)
-            {
-                ms.Position = TimeSpan.Zero;
-                ms.Play();
-            }
-            else
-            {
-                if (CurrentIndex < playList.AudioPathList.Count - 1)
-                    ChangeAudio(playList.AudioPathList[++CurrentIndex]);
-            }
-        }
-
-        private void Window_Closed(object sender, EventArgs e)
-        {
-            BinaryFormatter formatter = new BinaryFormatter();
-            using (FileStream fs = new FileStream("P_S.dat", FileMode.OpenOrCreate))
-            {
-                formatter.Serialize(fs, Paths);
-            }
-            using (FileStream fs = new FileStream("P_List.dat", FileMode.OpenOrCreate))
-            {
-                formatter.Serialize(fs, playList.AudioPathList);
-            }
+                (sender as Button).IsHitTestVisible = true;
+            };
+            Anim.From = new Thickness(-400, 200, 0, 0);
+            Anim.To = elem.Margin;
+            Anim.Duration = new Duration(TimeSpan.FromSeconds(1));
+            elem.BeginAnimation(MarginProperty, Anim);
         }
     }
 }

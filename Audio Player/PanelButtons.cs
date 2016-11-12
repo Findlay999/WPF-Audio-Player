@@ -44,6 +44,23 @@ namespace Audio_Player
             }
         }
 
+
+        private void Play_Click(object sender, RoutedEventArgs e)
+        {
+            if (Playing)
+            {
+                ms.Pause();
+                Playing = false;
+                (PlayButton.Content as Image).Source = LoadImage(@"C:\Users\Євгеній\Documents\PlayB.png", false);
+            }
+            else
+            {
+                ms.Play();
+                Playing = true;
+                (PlayButton.Content as Image).Source = LoadImage(@"C:\Users\Євгеній\Documents\Pause.png", false);
+            }
+        }
+
     }
 
 }

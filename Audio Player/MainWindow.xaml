@@ -13,15 +13,8 @@
             <ColumnDefinition Width="50"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        
-        <MediaElement Name="ms" MediaEnded="ms_MediaEnded" MediaOpened="MyMediaElement_MediaOpened" LoadedBehavior="Play"/>
 
-        <Grid x:Name="TopPanel"  Grid.Row="0" Grid.Column="0" Background="LightGray">
-            <Border BorderBrush="Gray" BorderThickness="0, 0, 0, 1" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"/>
-            <Button Width="50" HorizontalAlignment="Left" Grid.Column="0" Click="RightPanel_Button_Click"  BorderThickness="0" Cursor="Hand" Background="{x:Null}" >
-                <Image Source="Resources/Menu_icon.png"/>
-            </Button>
-        </Grid>
+        <MediaElement Name="ms" MediaEnded="ms_MediaEnded" MediaOpened="MyMediaElement_MediaOpened" LoadedBehavior="Manual"/>
 
         <Grid x:Name="MainPanel" Grid.Column="1">
             <Grid.Background>
@@ -73,8 +66,8 @@
                     <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
 
-                <ListBox BorderThickness="0" Grid.Row="1" Name="Play" Background="#FF7E7E7E" DataContext="{Binding}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="True"> 
-                <ListBox.ItemsPanel>
+                <ListBox BorderThickness="0" Grid.Row="1" Name="Play" Background="#FF7E7E7E" DataContext="{Binding}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="True">
+                    <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel>
                                 <StackPanel.Style>
@@ -137,13 +130,29 @@
                         </Image.Effect>
                         <Image.Style>
                             <Style TargetType="Image">
+                                <Setter Property="Visibility" Value="Hidden"/>
                                 <Style.Triggers>
+
                                     <DataTrigger Binding="{Binding ElementName=TitleSizer, Path=Visibility}" Value="Hidden">
                                         <Setter Property="Grid.ColumnSpan" Value="4"/>
                                     </DataTrigger>
+
                                     <DataTrigger Binding="{Binding ElementName=TitleSizer, Path=Visibility}" Value="Visible">
                                         <Setter Property="Grid.ColumnSpan" Value="1"/>
                                     </DataTrigger>
+
+                                    <DataTrigger Binding="{Binding ElementName=BottomPanel, Path=Visibility}" Value="Visible">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                        <DataTrigger.EnterActions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <DoubleAnimation Duration="0:0:1" From="0" To="1"
+                                           Storyboard.TargetProperty="Opacity"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </DataTrigger.EnterActions>
+                                    </DataTrigger>
+
                                 </Style.Triggers>
                             </Style>
                         </Image.Style>
@@ -159,11 +168,28 @@
                                 </StackPanel>
                             </StackPanel>
                         </Viewbox>
+
+                        <Grid.Style>
+                            <Style TargetType="Grid">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=BottomPanel, Path=Visibility}" Value="Visible">
+                                        <DataTrigger.EnterActions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <ThicknessAnimation Duration="0:0:1" From="200, 0, 15, 30" To="0, 0, 15, 30"
+                                           Storyboard.TargetProperty="Margin"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </DataTrigger.EnterActions>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Grid.Style>
                     </Grid>
                 </Grid>
 
             </Grid>
-
+            
         </Grid>
 
         <Grid x:Name="RightPanel" Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Background="LightGray" HorizontalAlignment="Left" Width="50" Opacity="1" Panel.ZIndex="1">
@@ -185,12 +211,29 @@
             </Button>
         </Grid>
 
-        <Grid x:Name="BottomPanel" Visibility="Hidden" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Height="50" Panel.ZIndex="2" Opacity="0.9">
+        <Grid x:Name="BottomPanel" Visibility="Hidden" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Height="55" Panel.ZIndex="2" Opacity="1">
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=BottomPanel, Path=Visibility}" Value="Visible">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ThicknessAnimation Duration="0:0:1" From="0, 0, 0, -50" To= "0, 0, 0, 0"
+                                           Storyboard.TargetProperty="Margin"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            
             <Grid.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="#FF898989" Offset="0"/>
-                    <GradientStop Color="White" Offset="0.5"/>
-                    <GradientStop Color="#FF898989" Offset="1"/>
+                    <GradientStop Color="#FF006FAE" Offset="0"/>
+                    <GradientStop Color="#FF006FAE" Offset="0.5"/>
+                    <GradientStop Color="#FF006FAE" Offset="1"/>
                 </LinearGradientBrush>
             </Grid.Background>
 
@@ -200,7 +243,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="250" MinWidth="250"/>
                 </Grid.ColumnDefinitions>
-    
+
                 <StackPanel Name="BotButtons" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Stretch" Panel.ZIndex="1" Background="{Binding ElementName=BottomPanel, Path=Background}">
                     <Button Width="30" Background="{x:Null}" Margin="5, 10, 5, 10" Click="PrevAudio_Click" BorderThickness="0">
                         <Image Source="Resources\PrevB.png"/>
@@ -237,9 +280,9 @@
 
                     </Grid>
                 </Popup>
-                
+
                 <Slider Style="{StaticResource Horizontal_Slider}" MouseLeftButtonUp="timeSlider_MouseLeftButtonUp"  IsMoveToPointEnabled="True" Value="100" Margin="20, 0, 20, 0" Name="AudioSlider" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Visibility="Hidden"/>
-                
+
                 <StackPanel Grid.Column="0" Name="BottomInfo" Orientation="Vertical" HorizontalAlignment="Left"  Margin="5, 0, 0, 0" VerticalAlignment="Center" Panel.ZIndex="0">
                     <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
                     <StackPanel Orientation="Horizontal">
@@ -259,7 +302,7 @@
                         </Style>
                     </StackPanel.Style>
                 </StackPanel>
-                
+
             </Grid>
         </Grid>
 
