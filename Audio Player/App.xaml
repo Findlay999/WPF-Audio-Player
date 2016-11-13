@@ -6,6 +6,9 @@
 
     <Application.Resources>
 
+      
+        
+        
         <Style x:Key="SliderRepeatButton" TargetType="RepeatButton">
             <Setter Property="SnapsToDevicePixels" Value="true" />
             <Setter Property="OverridesDefaultStyle" Value="true" />

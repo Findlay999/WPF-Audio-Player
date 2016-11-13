@@ -40,6 +40,8 @@ namespace Audio_Player
         {
             InitializeComponent();
             DeserializeData();
+
+            Shit.ItemsSource = new List<double>() { 3, 4, 5, 3, 1, 2 ,3 ,4 ,5 };
         }
 
         private void MyMediaElement_MediaOpened(object sender, RoutedEventArgs e)
@@ -158,8 +160,16 @@ namespace Audio_Player
         }
 
 
+        private void ShowLists_Click(object sender, RoutedEventArgs e)
+        {
+            PListControl.Visibility = Visibility.Visible;
+            AddFolder.Visibility = Visibility.Collapsed;
+            PlayGrid.Visibility = Visibility.Collapsed;
+        }
+
         private void PlayList_Click(object sender, RoutedEventArgs e)
         {
+            PListControl.Visibility = Visibility.Collapsed;
             AddFolder.Visibility = Visibility.Collapsed;
             PlayGrid.Visibility = Visibility.Visible;
             OpacityAnim(PlayGrid, sender);
@@ -167,6 +177,7 @@ namespace Audio_Player
 
         private void AddToFolder_Click(object sender, RoutedEventArgs e)
         {
+            PListControl.Visibility = Visibility.Collapsed;
             AddFolder.Visibility = Visibility.Visible;
             PlayGrid.Visibility = Visibility.Collapsed;
             RideAnim(AddFolder, sender);
@@ -292,5 +303,6 @@ namespace Audio_Player
             Anim.Duration = new Duration(TimeSpan.FromSeconds(1));
             elem.BeginAnimation(MarginProperty, Anim);
         }
+
     }
 }

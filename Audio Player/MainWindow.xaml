@@ -8,6 +8,21 @@
         mc:Ignorable="d"
         Title="Player" Height="535" Width="500" SizeChanged="Window_SizeChanged" Closed="Window_Closed">
 
+    <Window.Resources>
+        
+        <Style TargetType="Border" x:Key="PL_Settings">
+            <Setter Property="Background" Value="#FFDDDDDD"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="AliceBlue"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+        
+    </Window.Resources>
+    
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="50"/>
@@ -60,7 +75,7 @@
                 </ListBox>
             </Grid>
 
-            <Grid Name="PlayGrid" Visibility="Hidden">
+            <Grid Name="PlayGrid" Visibility="Collapsed">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*"/>
                     <RowDefinition Height="1*"/>
@@ -190,6 +205,76 @@
 
             </Grid>
 
+            <Grid Name="PListControl" Visibility="Collapsed">
+
+                <ListBox Name="Shit" Background="{x:Null}" DataContext="{Binding}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel  Margin="10, 10, 10, 0" Orientation="Vertical">
+                                <Border Width="120" Height="120" BorderThickness="1" BorderBrush="Black">
+                                    <Grid>
+                                        <Image Name="ImgPL" Source="C:\Users\Євгеній\Desktop\PlayList.png">
+                                            <Image.Style>
+                                                <Style TargetType="Image">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Border}, Path=IsMouseOver}" Value="True">
+                                                            <Setter Property="Opacity" Value="0.3"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Border}, Path=IsMouseOver}" Value="False">
+                                                            <Setter Property="Opacity" Value="1"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Image.Style>
+                                        </Image>
+
+                                        <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Orientation="Horizontal" Margin="0, 0, 0, 5" Width="115">
+
+
+                                            <Border Margin="2.5, 0, 2.5, 0" CornerRadius="5" Width="35" Height="35" BorderThickness="1" BorderBrush="Black" Style="{StaticResource PL_Settings}">
+                                                <Image Source="file:///C:/Users/Євгеній/Desktop/Edit.png" Cursor="Hand"/>
+                                            </Border>
+
+                                            <Border CornerRadius="5" Width="35" Height="35" BorderThickness="1" BorderBrush="Black" Style="{StaticResource PL_Settings}">
+                                                <Image Source="file:///C:/Users/Євгеній/Desktop/Sett.png" Cursor="Hand"/>
+                                            </Border>
+
+                                            <Border Margin="2.5, 0, 2.5, 0" CornerRadius="5" Width="35" Height="35" BorderThickness="1" BorderBrush="Black"  Style="{StaticResource PL_Settings}">
+                                                <Image Source="file:///C:/Users/Євгеній/Desktop/Del.png" Cursor="Hand"/>
+                                            </Border>
+
+
+                                            <StackPanel.Style>
+                                                <Style TargetType="StackPanel">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding ElementName=ImgPL, Path=Opacity}" Value="0.3">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding ElementName=ImgPL, Path=Opacity}" Value="1">
+                                                            <Setter Property="Visibility" Value="Hidden"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </StackPanel.Style>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+
+                                <TextBlock Margin="0, 5, 0, 0" Text="Jukisdo" TextAlignment="Center" FontWeight="Bold"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel IsItemsHost="True" Orientation="Horizontal"  />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                </ListBox>
+
+            </Grid>
+
         </Grid>
 
         <Grid x:Name="RightPanel" Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Background="LightGray" HorizontalAlignment="Left" Width="50" Opacity="1" Panel.ZIndex="1">
@@ -197,6 +282,7 @@
                 <DropShadowEffect Opacity="0.5" Direction="90"/>
             </Grid.Effect>
             <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
@@ -209,6 +295,11 @@
             <Button Grid.Row="1" Margin="0, 5, 0, 5" BorderThickness="0" Background="{x:Null}" Name="AddToFolder" Click="AddToFolder_Click">
                 <Image Source="Resources/add.png"/>
             </Button>
+
+            <Button Grid.Row="2" Margin="0, 5, 0, 5" BorderThickness="0" Background="{x:Null}" Name="ShowLists" Click="ShowLists_Click">
+                <Image Source="Resources/add.png"/>
+            </Button>
+            
         </Grid>
         <Grid x:Name="BottomPanel" Grid.Row="2"  Grid.ColumnSpan="2" Panel.ZIndex="2" Grid.Column="0" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Visibility="Hidden" Opacity="1" Height="50">
             <Grid.Background>
