@@ -41,7 +41,7 @@ namespace Audio_Player
             InitializeComponent();
             DeserializeData();
 
-            Shit.ItemsSource = new List<double>() { 3, 4, 5, 3, 1, 2 ,3 ,4 ,5 };
+            PL_ListBox.ItemsSource = new List<double>() { 3, 4, 5, 3, 1, 2 ,3 ,4 ,5 };
         }
 
         private void MyMediaElement_MediaOpened(object sender, RoutedEventArgs e)
@@ -165,6 +165,7 @@ namespace Audio_Player
             PListControl.Visibility = Visibility.Visible;
             AddFolder.Visibility = Visibility.Collapsed;
             PlayGrid.Visibility = Visibility.Collapsed;
+            OpacityAnim(PListControl, sender);
         }
 
         private void PlayList_Click(object sender, RoutedEventArgs e)
@@ -303,6 +304,5 @@ namespace Audio_Player
             Anim.Duration = new Duration(TimeSpan.FromSeconds(1));
             elem.BeginAnimation(MarginProperty, Anim);
         }
-
     }
 }

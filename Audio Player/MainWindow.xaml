@@ -1,4 +1,4 @@
-﻿<Window
+﻿ <Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -11,10 +11,10 @@
     <Window.Resources>
         
         <Style TargetType="Border" x:Key="PL_Settings">
-            <Setter Property="Background" Value="#FFDDDDDD"/>
+            <Setter Property="Background" Value="LightGray"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="AliceBlue"/>
+                    <Setter Property="Background" Value="White"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -206,13 +206,20 @@
             </Grid>
 
             <Grid Name="PListControl" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-                <ListBox Name="Shit" Background="{x:Null}" DataContext="{Binding}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <Border BorderBrush="Black" BorderThickness="0, 0, 0, 3">
+                    <TextBlock Margin="70, 20, 0, 0" Text="Списки воспроизведения" FontSize="23" FontWeight="DemiBold"/>
+                </Border>
 
+                <ListBox Name="PL_ListBox" Grid.Row="1" SelectedIndex="-1" Background="{x:Null}" DataContext="{Binding}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel  Margin="10, 10, 10, 0" Orientation="Vertical">
-                                <Border Width="120" Height="120" BorderThickness="1" BorderBrush="Black">
+                                <Border Width="120" Height="120" BorderThickness="1" BorderBrush="Black" Cursor="Hand">
                                     <Grid>
                                         <Image Name="ImgPL" Source="C:\Users\Євгеній\Desktop\PlayList.png">
                                             <Image.Style>
@@ -228,47 +235,20 @@
                                                 </Style>
                                             </Image.Style>
                                         </Image>
-
-                                        <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Orientation="Horizontal" Margin="0, 0, 0, 5" Width="115">
-
-
-                                            <Border Margin="2.5, 0, 2.5, 0" CornerRadius="5" Width="35" Height="35" BorderThickness="1" BorderBrush="Black" Style="{StaticResource PL_Settings}">
-                                                <Image Source="file:///C:/Users/Євгеній/Desktop/Edit.png" Cursor="Hand"/>
-                                            </Border>
-
-                                            <Border CornerRadius="5" Width="35" Height="35" BorderThickness="1" BorderBrush="Black" Style="{StaticResource PL_Settings}">
-                                                <Image Source="file:///C:/Users/Євгеній/Desktop/Sett.png" Cursor="Hand"/>
-                                            </Border>
-
-                                            <Border Margin="2.5, 0, 2.5, 0" CornerRadius="5" Width="35" Height="35" BorderThickness="1" BorderBrush="Black"  Style="{StaticResource PL_Settings}">
-                                                <Image Source="file:///C:/Users/Євгеній/Desktop/Del.png" Cursor="Hand"/>
-                                            </Border>
-
-
-                                            <StackPanel.Style>
-                                                <Style TargetType="StackPanel">
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding ElementName=ImgPL, Path=Opacity}" Value="0.3">
-                                                            <Setter Property="Visibility" Value="Visible"/>
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding ElementName=ImgPL, Path=Opacity}" Value="1">
-                                                            <Setter Property="Visibility" Value="Hidden"/>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </StackPanel.Style>
-                                        </StackPanel>
                                     </Grid>
                                 </Border>
 
-                                <TextBlock Margin="0, 5, 0, 0" Text="Jukisdo" TextAlignment="Center" FontWeight="Bold"/>
+                                <TextBox Name="PLName"  IsReadOnly="True" Margin="0, 5, 0, 0" Text="Jukisdo" TextAlignment="Center" FontWeight="Bold"/>
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
 
+                  
+                    
                     <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <WrapPanel IsItemsHost="True" Orientation="Horizontal"  />
+                            <WrapPanel IsItemsHost="True" Orientation="Horizontal">
+                            </WrapPanel>
                         </ItemsPanelTemplate>
                     </ListBox.ItemsPanel>
                 </ListBox>

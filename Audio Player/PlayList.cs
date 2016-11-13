@@ -49,7 +49,7 @@ namespace Audio_Player
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                MessageBox.Show(e.Message);
             }
         }
     }
