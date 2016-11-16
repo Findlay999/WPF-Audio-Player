@@ -1,15 +1,24 @@
-﻿ <Window
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Audio_Player"
+        xmlns:local="clr-namespace:Audio_Player" x:Name="window"
         x:Class="Audio_Player.MainWindow"
         mc:Ignorable="d"
-        Title="Player" Height="535" Width="500" SizeChanged="Window_SizeChanged" Closed="Window_Closed">
+        Title="Player" MinHeight="535" MinWidth="520" SizeChanged="Window_SizeChanged" Closed="Window_Closed">
 
     <Window.Resources>
-        
+
+        <Style TargetType="TextBlock" x:Key="TB_MouseOver">
+            <Setter Property="Foreground" Value="#FFBDBCBC"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="true">
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
         <Style TargetType="Border" x:Key="PL_Settings">
             <Setter Property="Background" Value="LightGray"/>
             <Style.Triggers>
@@ -18,11 +27,11 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-        
-        
+
+
     </Window.Resources>
-    
-    
+
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="50"/>
@@ -39,7 +48,7 @@
                 </LinearGradientBrush>
             </Grid.Background>
 
-            <Grid Name="AddFolder" Visibility="Visible">
+            <Grid Name="AddFolder" Visibility="Collapsed">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
@@ -109,7 +118,7 @@
                                         <GradientStop Color="#FFC3C3C3" Offset="0"/>
                                     </LinearGradientBrush>
                                 </ListView.Background>
-                                <Grid Margin="5, 5, 0, 5" DataContext="{Binding}" Cursor="Hand" MouseLeftButtonDown="Audio_MouseLeftButtonDown" Width="{Binding ElementName=Play, Path=ActualWidth}">
+                                <Grid Margin="5, 5, 0, 5" Cursor="Hand" MouseLeftButtonDown="Audio_MouseLeftButtonDown" Width="{Binding ElementName=Play, Path=ActualWidth}">
                                     <StackPanel Orientation="Vertical" Background="{x:Null}">
                                         <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="DemiBold"/>
                                         <StackPanel Orientation="Horizontal">
@@ -219,7 +228,7 @@
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel  Margin="10, 10, 10, 0" Orientation="Vertical">
-                                <Border Width="120" Height="120" BorderThickness="1" BorderBrush="Black" Cursor="Hand">
+                                <Border Width="120" Height="120" BorderThickness="1" BorderBrush="Black" Cursor="Hand" PreviewMouseLeftButtonDown="PL_Click">
                                     <Grid>
                                         <Image Name="ImgPL" Source="C:\Users\Євгеній\Desktop\PlayList.png">
                                             <Image.Style>
@@ -238,13 +247,13 @@
                                     </Grid>
                                 </Border>
 
-                                <TextBox Name="PLName"  IsReadOnly="True" Margin="0, 5, 0, 0" Text="Jukisdo" TextAlignment="Center" FontWeight="Bold"/>
+                                <TextBlock Name="PLName" Margin="0, 5, 0, 0" Text="{Binding Name}" TextAlignment="Center" FontWeight="Bold"/>
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
 
-                  
-                    
+
+
                     <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapPanel IsItemsHost="True" Orientation="Horizontal">
@@ -252,8 +261,41 @@
                         </ItemsPanelTemplate>
                     </ListBox.ItemsPanel>
                 </ListBox>
-
             </Grid>
+
+            <Grid Name="PListInfo" Visibility="Hidden" DataContext="{Binding}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="300"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Orientation="Horizontal" Background="#FF212020">
+                    <Image Source="C:\Users\Євгеній\Desktop\PlayList.png" Stretch="Fill" Width="200" Height="200" Margin="50, 50, 0, 50"/>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="{Binding Name}" FontSize="25" FontWeight="DemiBold" Margin="25, 50, 0, 0" Background="{x:Null}" Foreground="#FFBDBCBC"/>
+                        <StackPanel Orientation="Horizontal"  Margin="25, 20, 0, 0">
+                            <TextBlock Text="{Binding IndexList.Count, StringFormat=Песен : {0}}" Foreground="#FFBDBCBC" FontSize="15"/>
+                            <TextBlock Text="{Binding AudioTime.Minutes, StringFormat= - {0} хв.}" Margin="3,0,0,0" Foreground="#FFBDBCBC" FontSize="15"/>
+                        </StackPanel>
+
+                        <TextBlock Text="Настройки" Style="{DynamicResource TB_MouseOver}" FontSize="14" Margin="25, 63, 0, 0" MouseLeftButtonDown="Settings_MouseLeftButtonDown" Cursor="Hand"/>
+
+                        <TextBlock Text="Воспроизвести" Style="{DynamicResource TB_MouseOver}"  Margin="25, 5, 0, 0" Cursor="Hand" FontSize="14" />
+
+                        <TextBlock Text="Добавить песни" Style="{DynamicResource TB_MouseOver}"  Margin="25, 5, 0, 0" Cursor="Hand" FontSize="14" />
+                        
+                        <Popup Name="SettPopup" AllowsTransparency="True" Placement="RelativePoint" PopupAnimation="Slide" HorizontalOffset="100" VerticalOffset="190">
+                            <Grid  Background="LightGray">
+                                <StackPanel Margin="10">
+                                    <TextBlock Text="Переименовать" FontSize="16" Margin="0, 0, 0, 10"/>
+                                    <TextBlock Text="Удалить" FontSize="16"/>
+                                </StackPanel>
+                            </Grid>
+                        </Popup>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+            <Grid Name="PL_info" />
 
         </Grid>
 
@@ -262,6 +304,7 @@
                 <DropShadowEffect Opacity="0.5" Direction="90"/>
             </Grid.Effect>
             <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
@@ -279,7 +322,11 @@
             <Button Grid.Row="2" Margin="0, 5, 0, 5" BorderThickness="0" Background="{x:Null}" Name="ShowLists" Click="ShowLists_Click">
                 <Image Source="Resources/add.png"/>
             </Button>
-            
+
+            <Button Grid.Row="3" Margin="0, 5, 0, 5" BorderThickness="0" Background="{x:Null}" Name="AddPlayList" Click="AddPlayList_Click">
+                <Image Source="Resources/add.png"/>
+            </Button>
+
         </Grid>
         <Grid x:Name="BottomPanel" Grid.Row="2"  Grid.ColumnSpan="2" Panel.ZIndex="2" Grid.Column="0" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Visibility="Hidden" Opacity="1" Height="50">
             <Grid.Background>
@@ -332,7 +379,7 @@
 
 
 
-                <Slider Style="{StaticResource Horizontal_Slider}" MouseLeftButtonUp="timeSlider_MouseLeftButtonUp"  IsMoveToPointEnabled="True" Value="100" Margin="20, 0, 20, 0" Name="AudioSlider" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Visibility="Hidden"/>
+                <Slider Style="{StaticResource Horizontal_Slider}" Cursor="Hand" MouseLeftButtonUp="timeSlider_MouseLeftButtonUp"  IsMoveToPointEnabled="True" Value="100" Margin="20, 0, 20, 0" Name="AudioSlider" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Visibility="Hidden"/>
 
                 <StackPanel Grid.Column="0" Name="BottomInfo" Orientation="Vertical" HorizontalAlignment="Left"  Margin="5, 0, 0, 0" VerticalAlignment="Center" Panel.ZIndex="0">
                     <TextBlock Text="{Binding Name}" FontWeight="Bold"/>

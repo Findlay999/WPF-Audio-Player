@@ -32,8 +32,12 @@ namespace Audio_Player
         public List<string> Paths = new List<string>();
         public int CurrentIndex = -1;
         public bool Playing = false;
-        public PlayList playList = new PlayList();
 
+        public MainPlayList mainPL = new MainPlayList();
+        public List<PlayList> playLists = new List<PlayList>();
+
+        public List<Audio> CurrentList;
+        
         private TimeSpan TotalTime;
 
         public MainWindow()
@@ -59,11 +63,11 @@ namespace Audio_Player
             Random rand = new Random();
             if (RandomButt.IsChecked == true)
             {
-                int[] Mas = Enumerable.Range(0, playList.AudioPathList.Count).Where(x => !playList.AudioPathList[x].IsPlayed).ToArray();
+                int[] Mas = Enumerable.Range(0, CurrentList.Count).Where(x => !CurrentList[x].IsPlayed).ToArray();
                 if (Mas.Length == 0)
                 {
-                    playList.AudioPathList.Select(x => x.IsPlayed = false);
-                    ChangeAudio(playList.AudioPathList[Mas[rand.Next(0, Mas.Length)]]);
+                    CurrentList.Select(x => x.IsPlayed = false);
+                    ChangeAudio(CurrentList[Mas[rand.Next(0, Mas.Length)]]);
                 }
             }
             else if (RepeatButt.IsChecked == true)
@@ -73,8 +77,8 @@ namespace Audio_Player
             }
             else
             {
-                if (CurrentIndex < playList.AudioPathList.Count - 1)
-                    ChangeAudio(playList.AudioPathList[++CurrentIndex]);
+                if (CurrentIndex < CurrentList.Count - 1)
+                    ChangeAudio(CurrentList[++CurrentIndex]);
             }
         }
 
@@ -100,9 +104,9 @@ namespace Audio_Player
         private void RemovePath_Click(object sender, RoutedEventArgs e)
         {
             string r = ((Button)sender).Content.ToString();
-            playList.AudioPathList = playList.AudioPathList.Where(x => x.DirectoryName != r).ToList();
-
-            Play.ItemsSource = new List<Audio>(playList.AudioPathList);
+            mainPL.AudioPathList = mainPL.AudioPathList.Where(x => x.DirectoryName != r).ToList();
+          
+            Play.ItemsSource = new List<Audio>(mainPL.AudioPathList);
 
             Paths.Remove(((Button)sender).Content.ToString());
             ListPaths.ItemsSource = new List<string>(Paths);
@@ -117,8 +121,8 @@ namespace Audio_Player
                 {
                     Paths.Add(Dialog.SelectedPath);
                     ListPaths.ItemsSource = new List<string>(Paths);
-                    playList.GetMusic(Dialog.SelectedPath);
-                    Play.ItemsSource = new List<Audio>(playList.AudioPathList);
+                    mainPL.GetMusic(Dialog.SelectedPath);
+                    Play.ItemsSource = new List<Audio>(mainPL.AudioPathList);
                 }
                 else
                 {
@@ -165,6 +169,7 @@ namespace Audio_Player
             PListControl.Visibility = Visibility.Visible;
             AddFolder.Visibility = Visibility.Collapsed;
             PlayGrid.Visibility = Visibility.Collapsed;
+            PListInfo.Visibility = Visibility.Collapsed;
             OpacityAnim(PListControl, sender);
         }
 
@@ -172,14 +177,18 @@ namespace Audio_Player
         {
             PListControl.Visibility = Visibility.Collapsed;
             AddFolder.Visibility = Visibility.Collapsed;
+            PListInfo.Visibility = Visibility.Collapsed;
             PlayGrid.Visibility = Visibility.Visible;
             OpacityAnim(PlayGrid, sender);
+
+            CurrentList = mainPL.AudioPathList;
         }
 
         private void AddToFolder_Click(object sender, RoutedEventArgs e)
         {
             PListControl.Visibility = Visibility.Collapsed;
             AddFolder.Visibility = Visibility.Visible;
+            PListInfo.Visibility = Visibility.Collapsed;
             PlayGrid.Visibility = Visibility.Collapsed;
             RideAnim(AddFolder, sender);
         }
@@ -193,7 +202,7 @@ namespace Audio_Player
             }
             using (FileStream fs = new FileStream("P_List.dat", FileMode.OpenOrCreate))
             {
-                formatter.Serialize(fs, playList.AudioPathList);
+                formatter.Serialize(fs, mainPL.AudioPathList);
             }
         }
 
@@ -226,11 +235,11 @@ namespace Audio_Player
             using (FileStream fs = new FileStream("P_List.dat", FileMode.OpenOrCreate))
             {
                 if (fs.Length != 0)
-                    playList.AudioPathList = (List<Audio>)formatter.Deserialize(fs);
+                    mainPL.AudioPathList = (List<Audio>)formatter.Deserialize(fs);
             }
 
             ListPaths.ItemsSource = new List<string>(Paths);
-            Play.ItemsSource = new List<Audio>(playList.AudioPathList);
+            Play.ItemsSource = new List<Audio>(mainPL.AudioPathList);
         }
 
         private void ChangeAudio(Audio audioContext)
@@ -244,7 +253,7 @@ namespace Audio_Player
 
             Playing = true;
             ms.Play();
-            CurrentIndex = playList.AudioPathList.IndexOf(audioContext);
+            CurrentIndex = CurrentList.IndexOf(audioContext);
 
             (PlayButton.Content as Image).Source = LoadImage(@"C:\Users\Євгеній\Documents\Pause.png", false);
 
@@ -303,6 +312,28 @@ namespace Audio_Player
             Anim.To = elem.Margin;
             Anim.Duration = new Duration(TimeSpan.FromSeconds(1));
             elem.BeginAnimation(MarginProperty, Anim);
+        }
+
+        private void AddPlayList_Click(object sender, RoutedEventArgs e)
+        {
+            CreateListWind Wind = new CreateListWind();
+            Wind.Owner = Application.Current.MainWindow;
+            this.Opacity = 0.2;
+            Wind.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            Wind.Show();
+        }
+
+        private void Settings_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (!SettPopup.IsOpen)
+                SettPopup.IsOpen = true;
+            else
+                SettPopup.IsOpen = false; 
+        }
+
+        private void PL_Click(object sender, MouseButtonEventArgs e)
+        {
+
         }
     }
 }
