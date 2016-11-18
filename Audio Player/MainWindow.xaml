@@ -27,8 +27,6 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-
-
     </Window.Resources>
 
 
@@ -281,7 +279,7 @@
                     <StackPanel Orientation="Vertical">
                         <TextBlock Text="{Binding Name}" FontSize="25" FontWeight="DemiBold" Margin="25, 50, 0, 0" Background="{x:Null}" Foreground="#FFBDBCBC"/>
                         <StackPanel Orientation="Horizontal"  Margin="25, 20, 0, 0">
-                            <TextBlock Text="{Binding IndexList.Count, StringFormat=Песен : {0}}" Foreground="#FFBDBCBC" FontSize="15"/>
+                            <TextBlock Text="{Binding AudioList.Count, StringFormat=Песен : {0}}" Foreground="#FFBDBCBC" FontSize="15"/>
                             <TextBlock Text="{Binding AudioTime.Minutes, StringFormat= - {0} хв.}" Margin="3,0,0,0" Foreground="#FFBDBCBC" FontSize="15"/>
                         </StackPanel>
 
@@ -290,7 +288,7 @@
                         <TextBlock Text="Воспроизвести" Style="{DynamicResource TB_MouseOver}"  Margin="25, 5, 0, 0" Cursor="Hand" FontSize="14" />
 
                         <TextBlock Text="Добавить песни" Style="{DynamicResource TB_MouseOver}" DataContext="{Binding}"  Margin="25, 5, 0, 0" Cursor="Hand" FontSize="14" MouseLeftButtonDown="PlayListAddAudio_MouseLeftButtonDown" />
-                        
+
                         <Popup Name="SettPopup" AllowsTransparency="True" Placement="RelativePoint" PopupAnimation="Slide" HorizontalOffset="100" VerticalOffset="190">
                             <Grid  Background="LightGray">
                                 <StackPanel Margin="10">
@@ -301,8 +299,54 @@
                         </Popup>
                     </StackPanel>
                 </StackPanel>
+
+                <ListBox Grid.Row="1" Name="ListBoxOfAudios" Background="#FF7E7E7E" ItemsSource="{Binding AudioList}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel>
+                                <StackPanel.Style>
+                                    <Style TargetType="StackPanel">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ElementName=BottomPanel, Path=Visibility}" Value="Visible">
+                                                <Setter Property="Margin" Value="0, 0, 0, 50"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ElementName=BottomPanel, Path=Visibility}" Value="Hidden">
+                                                <Setter Property="Margin" Value="0, 0, 0, 0"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </StackPanel.Style>
+                            </StackPanel>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <ListView Margin="0, 2, 0, 2" BorderBrush="#FF0F0B0B" BorderThickness="3, 1, 3, 1" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                <ListView.Background>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="#FF858585" Offset="1"/>
+                                        <GradientStop Color="#FFC3C3C3" Offset="0"/>
+                                    </LinearGradientBrush>
+                                </ListView.Background>
+                                <Grid Margin="0,0, 0, 0" Width="{Binding ElementName=ListBoxOfAudios, Path=ActualWidth}" Background="{x:Null}" >
+                                    <ListView Margin="0, 0, 0, 0" BorderBrush="{x:Null}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Background="{x:Null}">
+                                        <Grid Cursor="Hand" HorizontalAlignment="Stretch">
+                                            <StackPanel Orientation="Vertical" Background="{x:Null}">
+                                                <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="DemiBold"/>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Margin="0, 0, 5, 0" Text="{Binding Singer}"  FontSize="12" FontWeight="Regular"/>
+                                                    <TextBlock Margin="5, 0, 0, 0" Text="{Binding Album}" FontSize="12" FontWeight="Regular"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Grid>
+                                    </ListView>
+                                </Grid>
+                            </ListView>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
             </Grid>
-            <Grid Name="PL_info" />
 
         </Grid>
 

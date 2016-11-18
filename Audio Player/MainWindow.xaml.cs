@@ -44,8 +44,6 @@ namespace Audio_Player
         {
             InitializeComponent();
             DeserializeData();
-
-            PL_ListBox.ItemsSource = new List<double>() { 3, 4, 5, 3, 1, 2 ,3 ,4 ,5 };
         }
 
         private void MyMediaElement_MediaOpened(object sender, RoutedEventArgs e)
@@ -204,6 +202,10 @@ namespace Audio_Player
             {
                 formatter.Serialize(fs, mainPL.AudioPathList);
             }
+            using (FileStream fs = new FileStream("P_lists.dat", FileMode.OpenOrCreate))
+            {
+                formatter.Serialize(fs, playLists);
+            }
         }
 
         public BitmapImage LoadImage(string text, bool decode)
@@ -238,7 +240,14 @@ namespace Audio_Player
                     mainPL.AudioPathList = (List<Audio>)formatter.Deserialize(fs);
             }
 
+            using (FileStream fs = new FileStream("P_lists.dat", FileMode.OpenOrCreate))
+            {
+                if (fs.Length != 0)
+                    playLists = (List<PlayList>)formatter.Deserialize(fs);
+            }
+
             ListPaths.ItemsSource = new List<string>(Paths);
+            PL_ListBox.ItemsSource = new List<PlayList>(playLists);
             Play.ItemsSource = new List<Audio>(mainPL.AudioPathList);
         }
 
@@ -347,7 +356,7 @@ namespace Audio_Player
             this.Opacity = 0.2;
             NewWind.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             NewWind.Index = playLists.IndexOf((sender as TextBlock).DataContext as PlayList);
-            NewWind.ListOfAudio.ItemsSource = mainPL.AudioPathList.Where(x => !playLists[NewWind.Index].IndexList.Contains(x)); // отображаем только песни, которых нет в плейлисте
+            NewWind.ListOfAudio.ItemsSource = mainPL.AudioPathList.Where(x => !playLists[NewWind.Index].AudioList.Contains(x)); // отображаем только песни, которых нет в плейлисте
             NewWind.Show();
         }
     }

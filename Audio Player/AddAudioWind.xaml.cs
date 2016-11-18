@@ -49,11 +49,18 @@ namespace Audio_Player
         private void OkB_Click(object sender, RoutedEventArgs e)
         {
             MainWindow main = this.Owner as MainWindow;
-            main.playLists[Index].IndexList.AddRange(SelectedAudioList);
+            main.playLists[Index].AudioList.AddRange(SelectedAudioList);
             main.PL_ListBox.ItemsSource = new List<PlayList>(main.playLists);
             main.playLists[Index].GetTime();
             main.PListInfo.DataContext = null;
             main.PListInfo.DataContext = main.playLists[Index];
+            main.Opacity = 1;
+            this.Close();
+        }
+
+        private void CancB_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow main = this.Owner as MainWindow;
             main.Opacity = 1;
             this.Close();
         }
