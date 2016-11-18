@@ -37,12 +37,19 @@ namespace Audio_Player
         {
             MainWindow main = this.Owner as MainWindow;
             PlayList NewList = new PlayList();
+
+            if (main.playLists.Any(x => x.Name == Name_TB.Text))
+            {              
+                MessageBox.Show("Плейлист с таким названием уже существует...");
+                return;
+            }
+
             NewList.Name = Name_TB.Text;
             main.PListInfo.DataContext = NewList;
             main.playLists.Add(NewList);
             main.PL_ListBox.ItemsSource = new List<PlayList>(main.playLists);
             main.Opacity = 1;
-            
+
             main.PListInfo.Visibility = Visibility.Visible;
             main.PListControl.Visibility = Visibility.Collapsed;
             main.AddFolder.Visibility = Visibility.Collapsed;

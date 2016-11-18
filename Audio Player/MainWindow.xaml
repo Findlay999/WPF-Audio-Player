@@ -283,7 +283,7 @@
                 <StackPanel Orientation="Horizontal" Background="#FF212020">
                     <Image Source="C:\Users\Євгеній\Desktop\PlayList.png" Stretch="Fill" Width="200" Height="200" Margin="50, 50, 0, 50"/>
                     <StackPanel Orientation="Vertical">
-                        <TextBlock Text="{Binding Name}" FontSize="25" FontWeight="DemiBold" Margin="25, 50, 0, 0" Background="{x:Null}" Foreground="#FFBDBCBC"/>
+                        <TextBox BorderThickness="0" IsHitTestVisible="False" IsReadOnly="True" Name="PlayListName_TB" Text="{Binding Name, Mode=TwoWay}" FontSize="25" FontWeight="DemiBold" Margin="25, 50, 0, 0" Background="{x:Null}" Foreground="#FFBDBCBC" KeyDown="PlayListName_TB_KeyDown"/>
                         <StackPanel Orientation="Horizontal"  Margin="25, 20, 0, 0">
                             <TextBlock Text="{Binding AudioList.Count, StringFormat=Песен : {0}}" Foreground="#FFBDBCBC" FontSize="15"/>
                             <TextBlock Text="{Binding AudioTime.Minutes, StringFormat= - {0} хв.}" Margin="3,0,0,0" Foreground="#FFBDBCBC" FontSize="15"/>
@@ -298,8 +298,8 @@
                         <Popup Name="SettPopup" AllowsTransparency="True" Placement="RelativePoint" PopupAnimation="Slide" HorizontalOffset="100" VerticalOffset="190">
                             <Grid  Background="LightGray">
                                 <StackPanel Margin="10">
-                                    <TextBlock Text="Переименовать" FontSize="16" Margin="0, 0, 0, 10"/>
-                                    <TextBlock Text="Удалить" FontSize="16"/>
+                                    <TextBlock Text="Переименовать" FontSize="16" Margin="0, 0, 0, 10" PreviewMouseLeftButtonDown="RenamePL_PreviewMouseLeftButtonDown"/>
+                                    <TextBlock Text="Удалить" FontSize="16" PreviewMouseLeftButtonDown="RemovePL_PreviewMouseLeftButtonDown"/>
                                 </StackPanel>
                             </Grid>
                         </Popup>
@@ -339,7 +339,7 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="20"/>
                                     </Grid.ColumnDefinitions>
-                                    
+
                                     <ListView Grid.Column="0" IsHitTestVisible="False" Margin="0, 0, 0, 0" BorderBrush="{x:Null}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Background="{x:Null}">
                                         <Grid HorizontalAlignment="Stretch">
                                             <StackPanel Orientation="Vertical" Background="{x:Null}">
@@ -362,7 +362,6 @@
                 </ListBox>
 
             </Grid>
-
         </Grid>
 
         <Grid x:Name="RightPanel" Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Background="LightGray" HorizontalAlignment="Left" Width="50" Opacity="1" Panel.ZIndex="1">
@@ -374,10 +373,13 @@
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
 
 
-            <Button Grid.Row="0" Margin="0, 5, 0, 5" BorderThickness="0" Background="{x:Null}" Click="PlayList_Click">
+            <Button Grid.Row="0" Margin="0, 5, 0, 5" BorderThickness="0" Background="{x:Null}" Name="PLrightButt" Click="PlayList_Click">
                 <Image Source="Resources/add.png"/>
             </Button>
 
@@ -390,6 +392,10 @@
             </Button>
 
             <Button Grid.Row="3" Margin="0, 5, 0, 5" BorderThickness="0" Background="{x:Null}" Click="AddPlayList_Click">
+                <Image Source="Resources/add.png"/>
+            </Button>
+
+            <Button Grid.Row="5" Margin="0, 5, 0, 5" BorderThickness="0" Background="{x:Null}" Click="ShowMainPL_Click">
                 <Image Source="Resources/add.png"/>
             </Button>
 
@@ -440,7 +446,7 @@
                         <Image Source="Resources\VolumeB.png"/>
                     </ToggleButton>
                     <ToggleButton Width="30" Name="RepeatButt" Content="O" Margin="5, 10, 5, 10"/>
-                    <ToggleButton Width="30" Name="RandomButt" Content="->" Margin="5, 10, 5, 10"/>
+                    <Button Width="30" Name="RandomButt" Content="->" Margin="5, 10, 5, 10" Click="RandomButt_Click"/>
                 </StackPanel>
 
 

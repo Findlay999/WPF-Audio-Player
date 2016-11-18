@@ -37,13 +37,14 @@ namespace Audio_Player
         public List<PlayList> playLists = new List<PlayList>();
 
         public List<Audio> CurrentList;
-        
+
         private TimeSpan TotalTime;
 
         public MainWindow()
         {
             InitializeComponent();
             DeserializeData();
+            CurrentList = mainPL.AudioPathList;
         }
 
         private void MyMediaElement_MediaOpened(object sender, RoutedEventArgs e)
@@ -58,17 +59,7 @@ namespace Audio_Player
 
         private void ms_MediaEnded(object sender, RoutedEventArgs e)
         {
-            Random rand = new Random();
-            if (RandomButt.IsChecked == true)
-            {
-                int[] Mas = Enumerable.Range(0, CurrentList.Count).Where(x => !CurrentList[x].IsPlayed).ToArray();
-                if (Mas.Length == 0)
-                {
-                    CurrentList.Select(x => x.IsPlayed = false);
-                    ChangeAudio(CurrentList[Mas[rand.Next(0, Mas.Length)]]);
-                }
-            }
-            else if (RepeatButt.IsChecked == true)
+            if (RepeatButt.IsChecked == true)
             {
                 ms.Position = TimeSpan.Zero;
                 ms.Play();
@@ -101,13 +92,18 @@ namespace Audio_Player
 
         private void RemovePath_Click(object sender, RoutedEventArgs e)
         {
-            string r = ((Button)sender).Content.ToString();
-            mainPL.AudioPathList = mainPL.AudioPathList.Where(x => x.DirectoryName != r).ToList();
-          
-            Play.ItemsSource = new List<Audio>(mainPL.AudioPathList);
+            if (MessageBox.Show("Удалить этот путь?", "Подтверждение", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                string r = ((Button)sender).Content.ToString();
+                mainPL.AudioPathList = mainPL.AudioPathList.Where(x => x.DirectoryName != r).ToList();
+                Paths.Remove(((Button)sender).Content.ToString());
+                ListPaths.ItemsSource = new List<string>(Paths);
 
-            Paths.Remove(((Button)sender).Content.ToString());
-            ListPaths.ItemsSource = new List<string>(Paths);
+                if(!BottomPanel.IsVisible)
+                {
+                    Play.ItemsSource = mainPL.AudioPathList;
+                }
+            }
         }
 
         private void AddPath_Click(object sender, RoutedEventArgs e)
@@ -120,7 +116,10 @@ namespace Audio_Player
                     Paths.Add(Dialog.SelectedPath);
                     ListPaths.ItemsSource = new List<string>(Paths);
                     mainPL.GetMusic(Dialog.SelectedPath);
-                    Play.ItemsSource = new List<Audio>(mainPL.AudioPathList);
+                    if (!BottomPanel.IsVisible)
+                    {
+                        Play.ItemsSource = new List<Audio>(mainPL.AudioPathList);
+                    }
                 }
                 else
                 {
@@ -178,8 +177,6 @@ namespace Audio_Player
             PListInfo.Visibility = Visibility.Collapsed;
             PlayGrid.Visibility = Visibility.Visible;
             OpacityAnim(PlayGrid, sender);
-
-            CurrentList = mainPL.AudioPathList;
         }
 
         private void AddToFolder_Click(object sender, RoutedEventArgs e)
@@ -253,7 +250,6 @@ namespace Audio_Player
 
         private void ChangeAudio(Audio audioContext)
         {
-            audioContext.IsPlayed = true;
             ms.Source = new Uri(audioContext.DirectoryName + "\\" + audioContext.Name);
             BottomPanel.Visibility = Visibility.Visible;
             TopPlayGrid.DataContext = audioContext;
@@ -262,9 +258,27 @@ namespace Audio_Player
 
             Playing = true;
             ms.Play();
+
             CurrentIndex = CurrentList.IndexOf(audioContext);
 
             (PlayButton.Content as Image).Source = LoadImage(@"C:\Users\Євгеній\Documents\Pause.png", false);
+            
+            if(!System.IO.File.Exists(audioContext.DirectoryName + "\\" + audioContext.Name))
+            {
+                if(MessageBox.Show("Этот файл был удален или перемещен...\nУдалить все данные о нем?", "Ошибка", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    playLists = playLists.Select(x => { x.AudioList = x.AudioList.Where
+                        (s => s.Name != audioContext.Name || s.DirectoryName != audioContext.DirectoryName).ToList(); x.GetTime(); return x; }).ToList();
+                    mainPL.AudioPathList = mainPL.AudioPathList.Where(x => x.Name != audioContext.Name || x.DirectoryName != audioContext.DirectoryName).ToList();
+                    CurrentList = CurrentList.Where(x => x.Name != audioContext.Name || x.DirectoryName != audioContext.DirectoryName).ToList();
+                    Play.ItemsSource = CurrentList;
+                    if (CurrentList.Count > 0)
+                    {
+                        ChangeAudio(CurrentList[CurrentIndex - 1]);
+                    }
+                    return;
+                }
+            }
 
             TagLib.File Ds = TagLib.File.Create(audioContext.DirectoryName + "\\" + audioContext.Name);
             if (Ds.Tag.Pictures.Length > 0)
@@ -356,23 +370,104 @@ namespace Audio_Player
             this.Opacity = 0.2;
             NewWind.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             NewWind.Index = playLists.IndexOf((sender as TextBlock).DataContext as PlayList);
-            NewWind.ListOfAudio.ItemsSource = mainPL.AudioPathList.Where(x => !playLists[NewWind.Index].AudioList.Contains(x)); // отображаем только песни, которых нет в плейлисте
+
+            NewWind.ListOfAudio.ItemsSource = mainPL.AudioPathList.Where(x => playLists[NewWind.Index].AudioList.Count(s => s.DirectoryName == x.DirectoryName && s.Name == x.Name) == 0); // отображаем только песни, которых нет в плейлисте
             NewWind.Show();
         }
 
         private void RemoveAudioFromPlayList_Click(object sender, MouseButtonEventArgs e)
         {
-            int ind = playLists.IndexOf(PListInfo.DataContext as PlayList);
-            playLists[ind].AudioList.Remove((sender as TextBlock).DataContext as Audio);
-            playLists[ind].GetTime();
-            PListInfo.DataContext = null;
-            PListInfo.DataContext = playLists[ind];
+            if (MessageBox.Show("Удалить этот аудиофайл?", "Подтверждение", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                int ind = playLists.IndexOf(PListInfo.DataContext as PlayList);
+                playLists[ind].AudioList.Remove((sender as TextBlock).DataContext as Audio);
+                playLists[ind].GetTime();
+                PListInfo.DataContext = null;
+                PListInfo.DataContext = playLists[ind];
+            }
         }
 
         private void PlayPlayList_Click(object sender, MouseButtonEventArgs e)
         {
-            CurrentList = (PListInfo.DataContext as PlayList).AudioList;
-            ChangeAudio(CurrentList[0]);
+            CurrentList = new List<Audio>((PListInfo.DataContext as PlayList).AudioList);
+
+            PListControl.Visibility = Visibility.Collapsed;
+            AddFolder.Visibility = Visibility.Collapsed;
+            PListInfo.Visibility = Visibility.Collapsed;
+            PlayGrid.Visibility = Visibility.Visible;
+
+            PLrightButt.IsHitTestVisible = false;
+            DoubleAnimation Anim = new DoubleAnimation();
+            Anim.Completed += delegate
+            {
+                PLrightButt.IsHitTestVisible = true;
+                if (CurrentList.Count > 0)
+                {
+                    ChangeAudio(CurrentList[0]);
+                }
+            };
+            Anim.From = 0;
+            Anim.To = 1;
+            Anim.Duration = new Duration(TimeSpan.FromSeconds(1));
+            PlayGrid.BeginAnimation(OpacityProperty, Anim);
+
+            Play.ItemsSource = CurrentList;
+        }
+
+        private void RandomButt_Click(object sender, RoutedEventArgs e)
+        {
+            Random rand = new Random();
+            CurrentList = CurrentList.OrderBy(x => x != CurrentList[CurrentIndex] ? rand.Next() : 0).ToList();
+            Play.ItemsSource = CurrentList;
+            CurrentIndex = 0;
+        }
+
+        private void RenamePL_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            PlayListName_TB.IsReadOnly = false;
+            PlayListName_TB.IsHitTestVisible = true;
+            PlayListName_TB.BorderThickness = new Thickness(1);
+            PlayListName_TB.CaretBrush = Brushes.White;
+            PlayListName_TB.CaretIndex = PlayListName_TB.Text.Length;
+            PlayListName_TB.Focus();
+            SettPopup.IsOpen = false;
+        }
+
+        private void RemovePL_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            SettPopup.IsOpen = false;
+            if(MessageBox.Show("Удалить этот плейлист?", "Подтверждение", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+               playLists.Remove((sender as TextBlock).DataContext as PlayList);
+               PL_ListBox.ItemsSource = new List<PlayList>(playLists);
+
+                PListInfo.Visibility = Visibility.Collapsed; 
+                PListControl.Visibility = Visibility.Collapsed;
+                AddFolder.Visibility = Visibility.Collapsed;
+                PListControl.Visibility = Visibility.Visible;
+                PlayGrid.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void PlayListName_TB_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Enter && PlayListName_TB.IsHitTestVisible)
+            {
+                PlayListName_TB.IsHitTestVisible = false;
+                PlayListName_TB.IsReadOnly = true;
+                PlayListName_TB.BorderThickness = new Thickness(0);
+                PlayListName_TB.IsReadOnlyCaretVisible = false;
+            }
+        }
+
+        private void ShowMainPL_Click(object sender, RoutedEventArgs e)
+        {
+            Play.ItemsSource = mainPL.AudioPathList;
+            CurrentList = mainPL.AudioPathList;
+            if(mainPL.AudioPathList.Count > 0)
+            {
+                ChangeAudio(CurrentList[0]);
+            }
         }
     }
 }
