@@ -359,5 +359,20 @@ namespace Audio_Player
             NewWind.ListOfAudio.ItemsSource = mainPL.AudioPathList.Where(x => !playLists[NewWind.Index].AudioList.Contains(x)); // отображаем только песни, которых нет в плейлисте
             NewWind.Show();
         }
+
+        private void RemoveAudioFromPlayList_Click(object sender, MouseButtonEventArgs e)
+        {
+            int ind = playLists.IndexOf(PListInfo.DataContext as PlayList);
+            playLists[ind].AudioList.Remove((sender as TextBlock).DataContext as Audio);
+            playLists[ind].GetTime();
+            PListInfo.DataContext = null;
+            PListInfo.DataContext = playLists[ind];
+        }
+
+        private void PlayPlayList_Click(object sender, MouseButtonEventArgs e)
+        {
+            CurrentList = (PListInfo.DataContext as PlayList).AudioList;
+            ChangeAudio(CurrentList[0]);
+        }
     }
 }
