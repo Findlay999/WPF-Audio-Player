@@ -17,8 +17,8 @@
 
             <TextBlock Grid.Row="0" Margin="20, 0, 0, 0" Text="Введите название списка" VerticalAlignment="Bottom" FontSize="16"/>
             <TextBox Grid.Row="1" Name="Name_TB" BorderBrush="Black" BorderThickness="2" Margin="20, 10, 20, 0" FontSize="16" TextChanged="Name_TB_TextChanged" />
-            <Button x:Name="OkB" IsEnabled="False" IsDefault="True" Content="Продовжити" Margin="50,25,0,0" Grid.Row="2" VerticalAlignment="Top" Height="25" HorizontalAlignment="Left" Width="120" Click="OkB_Click"/>
-            <Button x:Name="CancB" Content="Скасувати" Margin="0,25,70,0" Grid.Row="2" VerticalAlignment="Top" Height="25" HorizontalAlignment="Right" Width="120" Click="CancB_Click"/>
+            <Button x:Name="OkB" IsEnabled="False" IsDefault="True" Content="Продолжить" Margin="50,25,0,0" Grid.Row="2" VerticalAlignment="Top" Height="25" HorizontalAlignment="Left" Width="120" Click="OkB_Click"/>
+            <Button x:Name="CancB" Content="Отменить" Margin="0,25,70,0" Grid.Row="2" VerticalAlignment="Top" Height="25" HorizontalAlignment="Right" Width="120" Click="CancB_Click"/>
         </Grid>
 
         <Grid Name="AddSong" Visibility="Hidden">

@@ -11,5 +11,14 @@ namespace Audio_Player
         public List<Audio> IndexList { get; set; } = new List<Audio>();
         public string Name { get; set; }
         public TimeSpan AudioTime { get; set; }
+
+        public void GetTime()
+        {
+            AudioTime = new TimeSpan();
+            foreach(Audio val in IndexList)
+            {
+                AudioTime = AudioTime.Add(val.Duration);
+            }
+        }
     }
 }

@@ -151,12 +151,13 @@
         <Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding ElementName=BottomPanel, Path=Visibility}" Value="Visible">
-                    <Setter Property="Margin" Value="0, 0, 0, 50"/>
+                    <Setter Property="Margin" Value="0, 3, 0, 50"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding ElementName=BottomPanel, Path=Visibility}" Value="Hidden">
-                    <Setter Property="Margin" Value="0, 0, 0, 0"/>
+                    <Setter Property="Margin" Value="0, 3, 0, 0"/>
                 </DataTrigger>
             </Style.Triggers>
+            <Setter Property="Margin" Value="0, 3, 0, 4"/>
             <Setter Property="Stylus.IsFlicksEnabled" Value="false" />
             <Setter Property="Foreground" Value="LightGray" />
             <Setter Property="Background" Value="DarkGray" />

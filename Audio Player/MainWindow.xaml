@@ -126,7 +126,14 @@
                                             <TextBlock Margin="5, 0, 0, 0" Text="{Binding Album}" FontSize="12" FontWeight="Regular"/>
                                         </StackPanel>
                                     </StackPanel>
-                                    <TextBlock Background="{x:Null}" VerticalAlignment="Center" Grid.Column="1" Margin="0, 0, 60, 0" TextAlignment="Right" Text="{Binding Duration}" FontSize="13" FontWeight="DemiBold"/>
+                                    <TextBlock Background="{x:Null}" VerticalAlignment="Center" Grid.Column="1" Margin="0, 0, 60, 0" TextAlignment="Right" FontSize="13" FontWeight="DemiBold">
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}{0:00}:{1:00;00}">
+                                                <Binding Path="Duration.Minutes"/>
+                                                <Binding Path="Duration.Seconds"/>
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
                                 </Grid>
                             </ListView>
                         </DataTemplate>
@@ -282,7 +289,7 @@
 
                         <TextBlock Text="Воспроизвести" Style="{DynamicResource TB_MouseOver}"  Margin="25, 5, 0, 0" Cursor="Hand" FontSize="14" />
 
-                        <TextBlock Text="Добавить песни" Style="{DynamicResource TB_MouseOver}"  Margin="25, 5, 0, 0" Cursor="Hand" FontSize="14" />
+                        <TextBlock Text="Добавить песни" Style="{DynamicResource TB_MouseOver}" DataContext="{Binding}"  Margin="25, 5, 0, 0" Cursor="Hand" FontSize="14" MouseLeftButtonDown="PlayListAddAudio_MouseLeftButtonDown" />
                         
                         <Popup Name="SettPopup" AllowsTransparency="True" Placement="RelativePoint" PopupAnimation="Slide" HorizontalOffset="100" VerticalOffset="190">
                             <Grid  Background="LightGray">
@@ -311,19 +318,19 @@
             </Grid.RowDefinitions>
 
 
-            <Button Grid.Row="0" Margin="0, 5, 0, 5" BorderThickness="0" Background="{x:Null}" Name="PlayList" Click="PlayList_Click">
+            <Button Grid.Row="0" Margin="0, 5, 0, 5" BorderThickness="0" Background="{x:Null}" Click="PlayList_Click">
                 <Image Source="Resources/add.png"/>
             </Button>
 
-            <Button Grid.Row="1" Margin="0, 5, 0, 5" BorderThickness="0" Background="{x:Null}" Name="AddToFolder" Click="AddToFolder_Click">
+            <Button Grid.Row="1" Margin="0, 5, 0, 5" BorderThickness="0" Background="{x:Null}" Click="AddToFolder_Click">
                 <Image Source="Resources/add.png"/>
             </Button>
 
-            <Button Grid.Row="2" Margin="0, 5, 0, 5" BorderThickness="0" Background="{x:Null}" Name="ShowLists" Click="ShowLists_Click">
+            <Button Grid.Row="2" Margin="0, 5, 0, 5" BorderThickness="0" Background="{x:Null}" Click="ShowLists_Click">
                 <Image Source="Resources/add.png"/>
             </Button>
 
-            <Button Grid.Row="3" Margin="0, 5, 0, 5" BorderThickness="0" Background="{x:Null}" Name="AddPlayList" Click="AddPlayList_Click">
+            <Button Grid.Row="3" Margin="0, 5, 0, 5" BorderThickness="0" Background="{x:Null}" Click="AddPlayList_Click">
                 <Image Source="Resources/add.png"/>
             </Button>
 

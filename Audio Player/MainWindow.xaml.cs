@@ -333,7 +333,22 @@ namespace Audio_Player
 
         private void PL_Click(object sender, MouseButtonEventArgs e)
         {
+            PListControl.Visibility = Visibility.Collapsed;
+            AddFolder.Visibility = Visibility.Collapsed;
+            PListInfo.Visibility = Visibility.Visible;
+            PlayGrid.Visibility = Visibility.Collapsed;
+            PListInfo.DataContext = (sender as Border).DataContext;
+        }
 
+        private void PlayListAddAudio_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            AddAudioWind NewWind = new AddAudioWind();
+            NewWind.Owner = Application.Current.MainWindow;
+            this.Opacity = 0.2;
+            NewWind.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            NewWind.Index = playLists.IndexOf((sender as TextBlock).DataContext as PlayList);
+            NewWind.ListOfAudio.ItemsSource = mainPL.AudioPathList.Where(x => !playLists[NewWind.Index].IndexList.Contains(x)); // отображаем только песни, которых нет в плейлисте
+            NewWind.Show();
         }
     }
 }
