@@ -115,6 +115,7 @@
     <Compile Include="CreateListWind.xaml.cs">
       <DependentUpon>CreateListWind.xaml</DependentUpon>
     </Compile>
+    <Compile Include="LoadAudio.cs" />
     <Compile Include="MainPlayList.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

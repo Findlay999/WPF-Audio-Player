@@ -15,7 +15,6 @@ namespace Audio_Player
         public string Singer { get; set; }
         public string Album { get; set; }
         public TimeSpan Duration { get; set; }
-        public bool IsPlayed { get; set; }
 
         public Audio(string Name, string Title, string DirectoryName, string Singer, string Album, TimeSpan Duration)
         {

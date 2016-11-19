@@ -33,7 +33,10 @@ namespace Audio_Player
         public int CurrentIndex = -1;
         public bool Playing = false;
 
+        private LoadAudio load_audios = new LoadAudio();
+
         public MainPlayList mainPL = new MainPlayList();
+
         public List<PlayList> playLists = new List<PlayList>();
 
         public List<Audio> CurrentList;
@@ -44,6 +47,10 @@ namespace Audio_Player
         {
             InitializeComponent();
             DeserializeData();
+            PlayList Main = new PlayList();
+            Main.Name = "Main playlist";
+            playLists.Add(Main);
+
             CurrentList = mainPL.AudioPathList;
         }
 
@@ -93,15 +100,23 @@ namespace Audio_Player
         private void RemovePath_Click(object sender, RoutedEventArgs e)
         {
             if (MessageBox.Show("Удалить этот путь?", "Подтверждение", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-            {
-                string r = ((Button)sender).Content.ToString();
-                mainPL.AudioPathList = mainPL.AudioPathList.Where(x => x.DirectoryName != r).ToList();
-                Paths.Remove(((Button)sender).Content.ToString());
-                ListPaths.ItemsSource = new List<string>(Paths);
-
-                if(!BottomPanel.IsVisible)
+            {              
+                if (mainPL.AudioPathList.Equals(CurrentList))
                 {
+                    string r = ((Button)sender).Content.ToString();
+                    mainPL.AudioPathList = mainPL.AudioPathList.Where(x => x.DirectoryName != r).ToList();
+                    Paths.Remove(((Button)sender).Content.ToString());
+                    ListPaths.ItemsSource = new List<string>(Paths);
                     Play.ItemsSource = mainPL.AudioPathList;
+                    CurrentList = mainPL.AudioPathList;
+                    CurrentIndex = -1;
+                }
+                else
+                {
+                    string r = ((Button)sender).Content.ToString();
+                    mainPL.AudioPathList = mainPL.AudioPathList.Where(x => x.DirectoryName != r).ToList();
+                    Paths.Remove(((Button)sender).Content.ToString());
+                    ListPaths.ItemsSource = new List<string>(Paths);
                 }
             }
         }
@@ -111,14 +126,21 @@ namespace Audio_Player
             System.Windows.Forms.FolderBrowserDialog Dialog = new System.Windows.Forms.FolderBrowserDialog();
             if (Dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                if (!Paths.Contains(Dialog.SelectedPath))
+                if (!Paths.Contains(Dialog.SelectedPath)) //если такого пути нет в списку
                 {
-                    Paths.Add(Dialog.SelectedPath);
-                    ListPaths.ItemsSource = new List<string>(Paths);
-                    mainPL.GetMusic(Dialog.SelectedPath);
-                    if (!BottomPanel.IsVisible)
+                    Paths.Add(Dialog.SelectedPath); // добавляем путь
+                    ListPaths.ItemsSource = new List<string>(Paths); // отображаем список путей
+
+                    if (mainPL.AudioPathList.Equals(CurrentList)) // проверяем какой плейлист отображается, если главный...
                     {
-                        Play.ItemsSource = new List<Audio>(mainPL.AudioPathList);
+                        load_audios.GetMusic(Dialog.SelectedPath, ref mainPL.AudioPathList); // обновляем плейлист
+                        Play.ItemsSource = new List<Audio>(mainPL.AudioPathList); // обновляем текущий список воспроизведения
+                        CurrentList = mainPL.AudioPathList; // обновляем данные текущего списка воспроизведения
+                        CurrentIndex = -1; //после окончания песни воспроизведение начнется сначала списка.
+                    }
+                    else
+                    {
+                        load_audios.GetMusic(Dialog.SelectedPath, ref mainPL.AudioPathList);  // если плейлист пользовательский - обновляем только главний плейлист и все
                     }
                 }
                 else
@@ -130,8 +152,8 @@ namespace Audio_Player
 
         private void Audio_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            var audioContext = ((sender as Grid).DataContext as Audio);
-            ChangeAudio(audioContext);
+            var audioContext = ((sender as Grid).DataContext as Audio); // получаем данные нажатого grid-а
+            ChangeAudio(audioContext);// воспроизводим
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -252,7 +274,7 @@ namespace Audio_Player
         {
             ms.Source = new Uri(audioContext.DirectoryName + "\\" + audioContext.Name);
             BottomPanel.Visibility = Visibility.Visible;
-            TopPlayGrid.DataContext = audioContext;
+            TopPlayGrid.DataContext = audioContext; // обновляем верхнюю панель
 
             BottomPanel.Visibility = Visibility.Visible;
 
@@ -263,20 +285,25 @@ namespace Audio_Player
 
             (PlayButton.Content as Image).Source = LoadImage(@"C:\Users\Євгеній\Documents\Pause.png", false);
             
-            if(!System.IO.File.Exists(audioContext.DirectoryName + "\\" + audioContext.Name))
+            if(!System.IO.File.Exists(audioContext.DirectoryName + "\\" + audioContext.Name))  // проверка наличия файла перед воспроизведением
             {
-                if(MessageBox.Show("Этот файл был удален или перемещен...\nУдалить все данные о нем?", "Ошибка", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                // если такой файл не существует - создается диалоговое окно 
+                if(MessageBox.Show("Этот файл был удален или перемещен...\nУдалить все данные о нем?", "Ошибка", MessageBoxButton.YesNo) == MessageBoxResult.Yes) 
                 {
                     playLists = playLists.Select(x => { x.AudioList = x.AudioList.Where
-                        (s => s.Name != audioContext.Name || s.DirectoryName != audioContext.DirectoryName).ToList(); x.GetTime(); return x; }).ToList();
-                    mainPL.AudioPathList = mainPL.AudioPathList.Where(x => x.Name != audioContext.Name || x.DirectoryName != audioContext.DirectoryName).ToList();
-                    CurrentList = CurrentList.Where(x => x.Name != audioContext.Name || x.DirectoryName != audioContext.DirectoryName).ToList();
-                    Play.ItemsSource = CurrentList;
+                        (s => s.Name != audioContext.Name || s.DirectoryName != audioContext.DirectoryName).ToList(); x.GetTime(); return x; }).ToList(); // с списка плейлистов, создаем новый список, в котором не будет такого файла
+                    mainPL.AudioPathList = mainPL.AudioPathList.Where(x => x.Name != audioContext.Name || x.DirectoryName != audioContext.DirectoryName).ToList(); // то же делаем и для главного плейлиста
+                    CurrentList = CurrentList.Where(x => x.Name != audioContext.Name || x.DirectoryName != audioContext.DirectoryName).ToList(); // то же и для текущего списка воспроизведения
+                    Play.ItemsSource = CurrentList; // обновляем главний список воспроизведения
                     if (CurrentList.Count > 0)
                     {
-                        ChangeAudio(CurrentList[CurrentIndex - 1]);
+                        ChangeAudio(CurrentList[--CurrentIndex]); // воспроизводим следующую песню
                     }
                     return;
+                }
+                else
+                {
+                    ChangeAudio(CurrentList[++CurrentIndex]); // воспроизводим следующую песню
                 }
             }
 
@@ -371,7 +398,8 @@ namespace Audio_Player
             NewWind.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             NewWind.Index = playLists.IndexOf((sender as TextBlock).DataContext as PlayList);
 
-            NewWind.ListOfAudio.ItemsSource = mainPL.AudioPathList.Where(x => playLists[NewWind.Index].AudioList.Count(s => s.DirectoryName == x.DirectoryName && s.Name == x.Name) == 0); // отображаем только песни, которых нет в плейлисте
+            NewWind.ListOfAudio.ItemsSource = mainPL.AudioPathList.Where(x => playLists[NewWind.Index].AudioList.Count
+                (s => s.DirectoryName == x.DirectoryName && s.Name == x.Name) == 0); // отображаем только песни, которых нет в плейлисте
             NewWind.Show();
         }
 
@@ -457,16 +485,6 @@ namespace Audio_Player
                 PlayListName_TB.IsReadOnly = true;
                 PlayListName_TB.BorderThickness = new Thickness(0);
                 PlayListName_TB.IsReadOnlyCaretVisible = false;
-            }
-        }
-
-        private void ShowMainPL_Click(object sender, RoutedEventArgs e)
-        {
-            Play.ItemsSource = mainPL.AudioPathList;
-            CurrentList = mainPL.AudioPathList;
-            if(mainPL.AudioPathList.Count > 0)
-            {
-                ChangeAudio(CurrentList[0]);
             }
         }
     }

@@ -24,33 +24,5 @@ namespace Audio_Player
     public class MainPlayList
     {
         public List<Audio> AudioPathList = new List<Audio>();
-        string[] Formats = new string[] { ".aif", ".m3u", ".m4a", ".mid", ".mp3", ".mpa", ".wav", ".wma" };
-
-        public void GetMusic(string Path)
-        {
-            try
-            {
-                DirectoryInfo dir = new DirectoryInfo(Path);
-
-                FileInfo[] files = dir.GetFiles();
-                foreach (FileInfo f in files)
-                {
-                    if (Formats.Contains(f.Extension))
-                    {
-                        TagLib.File FD = TagLib.File.Create(f.FullName);
-                        AudioPathList.Add(new Audio(f.Name, FD.Tag.Title, f.DirectoryName, FD.Tag.FirstArtist, FD.Tag.Album, FD.Properties.Duration));
-                    }
-                }
-
-                foreach (DirectoryInfo d in dir.GetDirectories())
-                {
-                    GetMusic(Path + @"\" + d.Name);
-                }
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
-            }
-        }
     }
 }

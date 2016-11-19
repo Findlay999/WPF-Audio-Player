@@ -373,9 +373,6 @@
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="50"/>
-                <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
 
 
@@ -392,10 +389,6 @@
             </Button>
 
             <Button Grid.Row="3" Margin="0, 5, 0, 5" BorderThickness="0" Background="{x:Null}" Click="AddPlayList_Click">
-                <Image Source="Resources/add.png"/>
-            </Button>
-
-            <Button Grid.Row="5" Margin="0, 5, 0, 5" BorderThickness="0" Background="{x:Null}" Click="ShowMainPL_Click">
                 <Image Source="Resources/add.png"/>
             </Button>
 
