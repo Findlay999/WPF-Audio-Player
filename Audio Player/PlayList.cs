@@ -11,14 +11,14 @@ namespace Audio_Player
     {
         public List<Audio> AudioList { get; set; } = new List<Audio>();
         public string Name { get; set; }
-        public TimeSpan AudioTime { get; set; }
+        public int AudioTime { get; set; }
 
         public void GetTime()
         {
-            AudioTime = new TimeSpan();
+            AudioTime = 0;
             foreach(Audio val in AudioList)
             {
-                AudioTime = AudioTime.Add(val.Duration);
+                AudioTime += val.Duration.Minutes;
             }
         }
     }

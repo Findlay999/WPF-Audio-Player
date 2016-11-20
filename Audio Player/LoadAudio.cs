@@ -13,8 +13,9 @@ namespace Audio_Player
     {
         string[] Formats = new string[] { ".aif", ".m3u", ".m4a", ".mid", ".mp3", ".mpa", ".wav", ".wma" };
 
-        public void GetMusic(string Path, ref List<Audio> AudioPathList)
+        public List<Audio> GetMusic(string Path)
         {
+            List<Audio> AudioPathList = new List<Audio>();
             try
             {
                 DirectoryInfo dir = new DirectoryInfo(Path);
@@ -33,10 +34,12 @@ namespace Audio_Player
                 {
                     GetMusic(Path + @"\" + d.Name);
                 } */
+                return AudioPathList;
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.Message);
+                return AudioPathList;
             }
         }
     }

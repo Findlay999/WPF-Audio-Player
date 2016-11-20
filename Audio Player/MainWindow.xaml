@@ -11,11 +11,16 @@
     <Window.Resources>
 
         <Style TargetType="TextBlock" x:Key="TB_MouseOver">
-            <Setter Property="Foreground" Value="#FFBDBCBC"/>
+            <Setter Property="Foreground" Value="#FFD4D4D4"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="true">
                     <Setter Property="Foreground" Value="White"/>
                 </Trigger>
+
+                <DataTrigger Binding="{Binding Name}" Value="Main Playlist">
+                    <Setter Property="IsEnabled" Value="False"/>
+                    <Setter Property="Foreground" Value="Gray"/>
+                </DataTrigger>
             </Style.Triggers>
         </Style>
 
@@ -46,7 +51,7 @@
                 </LinearGradientBrush>
             </Grid.Background>
 
-            <Grid Name="AddFolder" Visibility="Collapsed">
+            <Grid Name="AddFolder" Visibility="Visible">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
@@ -286,14 +291,26 @@
                         <TextBox BorderThickness="0" IsHitTestVisible="False" IsReadOnly="True" Name="PlayListName_TB" Text="{Binding Name, Mode=TwoWay}" FontSize="25" FontWeight="DemiBold" Margin="25, 50, 0, 0" Background="{x:Null}" Foreground="#FFBDBCBC" KeyDown="PlayListName_TB_KeyDown"/>
                         <StackPanel Orientation="Horizontal"  Margin="25, 20, 0, 0">
                             <TextBlock Text="{Binding AudioList.Count, StringFormat=Песен : {0}}" Foreground="#FFBDBCBC" FontSize="15"/>
-                            <TextBlock Text="{Binding AudioTime.Minutes, StringFormat= - {0} хв.}" Margin="3,0,0,0" Foreground="#FFBDBCBC" FontSize="15"/>
+                            <TextBlock Text="{Binding AudioTime, StringFormat= - {0} мин.}" Margin="3,0,0,0" Foreground="#FFBDBCBC" FontSize="15"/>
                         </StackPanel>
 
                         <TextBlock Text="Настройки" Style="{DynamicResource TB_MouseOver}" FontSize="14" Margin="25, 63, 0, 0" MouseLeftButtonDown="Settings_MouseLeftButtonDown" Cursor="Hand"/>
 
-                        <TextBlock Text="Воспроизвести" Style="{DynamicResource TB_MouseOver}"  Margin="25, 5, 0, 0" Cursor="Hand" FontSize="14" PreviewMouseLeftButtonDown="PlayPlayList_Click" />
+                        <TextBlock Text="Воспроизвести"  Margin="25, 5, 0, 0" Cursor="Hand" FontSize="14" PreviewMouseLeftButtonDown="PlayPlayList_Click">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="#FFD4D4D4"/>
+                                    <Setter Property="Margin" Value="25, 5, 0, 0"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="true">
+                                            <Setter Property="Foreground" Value="White"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>                                    
+                        </TextBlock>
 
-                        <TextBlock Text="Добавить песни" Style="{DynamicResource TB_MouseOver}" DataContext="{Binding}"  Margin="25, 5, 0, 0" Cursor="Hand" FontSize="14" MouseLeftButtonDown="PlayListAddAudio_MouseLeftButtonDown" />
+                        <TextBlock Text="Добавить песни" Style="{DynamicResource TB_MouseOver}" DataContext="{Binding}"  Margin="25, 5, 0, 0" Cursor="Hand" FontSize="14" MouseLeftButtonDown="PlayListAddAudio_MouseLeftButtonDown"/>
 
                         <Popup Name="SettPopup" AllowsTransparency="True" Placement="RelativePoint" PopupAnimation="Slide" HorizontalOffset="100" VerticalOffset="190">
                             <Grid  Background="LightGray">
@@ -351,8 +368,19 @@
                                             </StackPanel>
                                         </Grid>
                                     </ListView>
+                                    
                                     <TextBlock Height="15" Cursor="Hand" Grid.Column="1" FontSize="20" Background="{x:Null}" HorizontalAlignment="Center" VerticalAlignment="Center" PreviewMouseLeftButtonDown="RemoveAudioFromPlayList_Click">
                                         <Image Source="C:\Users\Євгеній\Desktop\remove.png"/>
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding ElementName=ListBoxOfAudios, Path=DataContext.Name}" Value="Main Playlist">
+                                                        <Setter Property="Visibility" Value="Hidden"/>
+                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
                                     </TextBlock>
 
                                 </Grid>
