@@ -28,19 +28,19 @@ namespace Audio_Player
         
         private void PrevAudio_Click(object sender, RoutedEventArgs e)
         {
-            if(CurrentIndex > 0 && playList.AudioPathList.Count >= CurrentIndex)
+            if(CurrentIndex > 0 && CurrentList.Count >= CurrentIndex)
             {
                 CurrentIndex--;
-                ChangeAudio(playList.AudioPathList[CurrentIndex]);
+                ChangeAudio(CurrentList[CurrentIndex]);
             }
         }
 
         private void NextAudio_Click(object sender, RoutedEventArgs e)
         {
-            if(CurrentIndex != -1 && CurrentIndex < playList.AudioPathList.Count - 1)
+            if(CurrentIndex != -1 && CurrentIndex < CurrentList.Count - 1)
             {
                 CurrentIndex++;
-                ChangeAudio(playList.AudioPathList[CurrentIndex]);
+                ChangeAudio(CurrentList[CurrentIndex]);
             }
         }
 

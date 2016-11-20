@@ -14,8 +14,7 @@ namespace Audio_Player
         public string DirectoryName { get; set; }
         public string Singer { get; set; }
         public string Album { get; set; }
-        public string Duration { get; set; }
-        public bool IsPlayed { get; set; }
+        public TimeSpan Duration { get; set; }
 
         public Audio(string Name, string Title, string DirectoryName, string Singer, string Album, TimeSpan Duration)
         {
@@ -24,7 +23,7 @@ namespace Audio_Player
             this.DirectoryName = DirectoryName;
             this.Singer = Singer;
             this.Album = Album;
-            this.Duration = Duration.ToString(@"mm\:ss");
+            this.Duration = Duration;
 
             if(String.IsNullOrEmpty(this.Album))
             {

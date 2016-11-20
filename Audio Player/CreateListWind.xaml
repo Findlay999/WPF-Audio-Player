@@ -1,0 +1,34 @@
+﻿<Window x:Class="Audio_Player.CreateListWind"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Audio_Player"
+        mc:Ignorable="d"
+        Title="CreateListWind" Height="150" Width="400" WindowStyle="None">
+
+    <Grid>
+        <Grid Name="SetName" Height="142" VerticalAlignment="Top" Margin="0,10,0,-10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.5*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="2*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Margin="20, 0, 0, 0" Text="Введите название списка" VerticalAlignment="Bottom" FontSize="16"/>
+            <TextBox Grid.Row="1" Name="Name_TB" BorderBrush="Black" BorderThickness="2" Margin="20, 10, 20, 0" FontSize="16" TextChanged="Name_TB_TextChanged" />
+            <Button x:Name="OkB" IsEnabled="False" IsDefault="True" Content="Продолжить" Margin="50,25,0,0" Grid.Row="2" VerticalAlignment="Top" Height="25" HorizontalAlignment="Left" Width="120" Click="OkB_Click"/>
+            <Button x:Name="CancB" Content="Отменить" Margin="0,25,70,0" Grid.Row="2" VerticalAlignment="Top" Height="25" HorizontalAlignment="Right" Width="120" Click="CancB_Click"/>
+        </Grid>
+
+        <Grid Name="AddSong" Visibility="Hidden">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+
+            <ListBox Grid.Column="1"/>
+        </Grid>
+    </Grid>
+</Window>
