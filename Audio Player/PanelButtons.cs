@@ -51,13 +51,13 @@ namespace Audio_Player
             {
                 ms.Pause();
                 Playing = false;
-                (PlayButton.Content as Image).Source = LoadImage(@"C:\Users\Євгеній\Documents\PlayB.png", false);
+                (PlayButton.Child as Image).Source = LoadImage(@"pack://application:,,,/Resources/PlayB.png", false);
             }
             else
             {
                 ms.Play();
                 Playing = true;
-                (PlayButton.Content as Image).Source = LoadImage(@"C:\Users\Євгеній\Documents\Pause.png", false);
+                (PlayButton.Child as Image).Source = LoadImage(@"pack://application:,,,/Resources/Pause.png", false);
             }
         }
 
