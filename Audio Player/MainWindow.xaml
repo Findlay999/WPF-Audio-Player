@@ -10,7 +10,6 @@
 
     <Window.Resources>
 
-
         <Style TargetType="Image" x:Key="BottomButtonsStyle">
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="true">
@@ -416,20 +415,20 @@
             </Grid.RowDefinitions>
 
 
-            <Button Grid.Row="0" Margin="0, 5, 0, 5" BorderThickness="0" Background="{x:Null}" Name="PLrightButt" Click="PlayList_Click">
-                <Image Source="Resources/add.png"/>
+            <Button Grid.Row="0" Margin="0, 5, 0, 5" BorderThickness="0" Background="{x:Null}" Name="PLrightButt" Click="PlayList_Click" ToolTip="Воспроизвести">
+                <Image Source="Resources/Mainpl.png" Width="50" />
+            </Button>
+ 
+            <Button Grid.Row="1" Margin="0, 5, 0, 5" BorderThickness="0" Background="{x:Null}" Click="AddToFolder_Click" ToolTip="Добавить путь">
+                <Image Source="Resources/Addfolder.png" Width="30"/>
             </Button>
 
-            <Button Grid.Row="1" Margin="0, 5, 0, 5" BorderThickness="0" Background="{x:Null}" Click="AddToFolder_Click">
-                <Image Source="Resources/add.png"/>
+            <Button Grid.Row="2" Margin="0, 5, 0, 5" BorderThickness="0" Background="{x:Null}" Click="ShowLists_Click" ToolTip="Списки воспроизведения">
+                <Image Source="Resources/playlists.png" Stretch="Uniform" Width="30"/>
             </Button>
 
-            <Button Grid.Row="2" Margin="0, 5, 0, 5" BorderThickness="0" Background="{x:Null}" Click="ShowLists_Click">
-                <Image Source="Resources/add.png"/>
-            </Button>
-
-            <Button Grid.Row="3" Margin="0, 5, 0, 5" BorderThickness="0" Background="{x:Null}" Click="AddPlayList_Click">
-                <Image Source="Resources/add.png"/>
+            <Button Grid.Row="3" Margin="0, 5, 0, 5" BorderThickness="0" Background="{x:Null}" Click="AddPlayList_Click" ToolTip="Добавить плейлист">
+                <Image Source="Resources/addpl.png" Width="30"/>
             </Button>
 
         </Grid>

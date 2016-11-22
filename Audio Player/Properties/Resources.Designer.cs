@@ -73,6 +73,36 @@ namespace Audio_Player.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap AddFolder {
+            get {
+                object obj = ResourceManager.GetObject("AddFolder", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap addpl {
+            get {
+                object obj = ResourceManager.GetObject("addpl", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap MainPL {
+            get {
+                object obj = ResourceManager.GetObject("MainPL", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Menu_icon {
             get {
                 object obj = ResourceManager.GetObject("Menu_icon", resourceCulture);
@@ -126,6 +156,16 @@ namespace Audio_Player.Properties {
         internal static System.Drawing.Bitmap PlayList {
             get {
                 object obj = ResourceManager.GetObject("PlayList", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap playlists {
+            get {
+                object obj = ResourceManager.GetObject("playlists", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
