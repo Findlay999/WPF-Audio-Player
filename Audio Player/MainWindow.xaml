@@ -9,7 +9,6 @@
         Title="Player" MinHeight="535" MinWidth="520" SizeChanged="Window_SizeChanged" Closed="Window_Closed">
 
     <Window.Resources>
-
         <Style TargetType="Image" x:Key="BottomButtonsStyle">
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="true">
