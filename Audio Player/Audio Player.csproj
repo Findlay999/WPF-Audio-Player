@@ -175,6 +175,30 @@
   <ItemGroup>
     <Resource Include="Resources\VolumeB.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\PlayList.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Random.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Remove.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\replay.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\AddFolder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\addpl.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\playlists.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\MainPL.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

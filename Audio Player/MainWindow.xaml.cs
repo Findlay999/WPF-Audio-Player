@@ -55,11 +55,18 @@ namespace Audio_Player
 
         private void MyMediaElement_MediaOpened(object sender, RoutedEventArgs e)
         {
-            TotalTime = ms.NaturalDuration.TimeSpan;
-            DispatcherTimer timerVideoTime = new DispatcherTimer();
-            timerVideoTime.Interval = TimeSpan.FromSeconds(1);
-            timerVideoTime.Tick += new EventHandler(timer_Tick);
-            timerVideoTime.Start();
+            try
+            {
+                TotalTime = ms.NaturalDuration.TimeSpan;
+                DispatcherTimer timerVideoTime = new DispatcherTimer();
+                timerVideoTime.Interval = TimeSpan.FromSeconds(1);
+                timerVideoTime.Tick += new EventHandler(timer_Tick);
+                timerVideoTime.Start();
+            }
+            catch(Exception d)
+            {
+                MessageBox.Show(d.Message);
+            }
         }
 
 
@@ -264,10 +271,12 @@ namespace Audio_Player
                 if (fs.Length != 0)
                 {
                     playLists = (List<PlayList>)formatter.Deserialize(fs);
+                    mainPL.GetTime();
                     playLists[0] = mainPL;
                 }
                 else
                 {
+                    mainPL.GetTime();
                     playLists.Add(mainPL);
                 }
             }
@@ -288,7 +297,7 @@ namespace Audio_Player
 
             CurrentIndex = CurrentList.IndexOf(audioContext);
 
-            (PlayButton.Content as Image).Source = LoadImage(@"C:\Users\Євгеній\Documents\Pause.png", false);
+            (PlayButton.Child as Image).Source = LoadImage(@"pack://application:,,,/Resources/Pause.png", false);
             
             if(!System.IO.File.Exists(audioContext.DirectoryName + "\\" + audioContext.Name))  // проверка наличия файла перед воспроизведением
             {
