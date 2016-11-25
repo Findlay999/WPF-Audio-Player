@@ -19,9 +19,7 @@ namespace Audio_Player
     /// </summary>
     public partial class AddAudioWind : Window
     {
-
-        List<Audio> SelectedAudioList = new List<Audio>();
-
+        private List<Audio> SelectedAudioList = new List<Audio>();
         public int Index;
 
         public AddAudioWind()
@@ -29,18 +27,18 @@ namespace Audio_Player
             InitializeComponent();
         }
 
-        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        private void CheckBox_Checked(object sender, RoutedEventArgs e) //если checkbox песни отмечен
         {
-            SelectedAudioList.Add((sender as CheckBox).DataContext as Audio);
+            SelectedAudioList.Add((sender as CheckBox).DataContext as Audio);  //добавляем песню в список
             if (SelectedAudioList.Count == 1)
             {
                 OkB.IsEnabled = true;
             }
         }
 
-        private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
+        private void CheckBox_Unchecked(object sender, RoutedEventArgs e)// ecли флажок убран 
         {
-            SelectedAudioList.Remove((sender as CheckBox).DataContext as Audio);
+            SelectedAudioList.Remove((sender as CheckBox).DataContext as Audio); //удаляем песню с списка
             if (SelectedAudioList.Count == 0)
             {
                 OkB.IsEnabled = false;
@@ -50,11 +48,7 @@ namespace Audio_Player
         private void OkB_Click(object sender, RoutedEventArgs e)
         {
             MainWindow main = this.Owner as MainWindow;
-            main.playLists[Index].AudioList.AddRange(SelectedAudioList);
-            main.PL_ListBox.ItemsSource = new List<PlayList>(main.playLists);
-            main.playLists[Index].GetTime();
-            main.PListInfo.DataContext = null;
-            main.PListInfo.DataContext = main.playLists[Index];
+            RefreshMainPlayLists(ref main);
             main.Opacity = 1;
             this.Close();
         }
@@ -64,6 +58,15 @@ namespace Audio_Player
             MainWindow main = this.Owner as MainWindow;
             main.Opacity = 1;
             this.Close();
+        }
+
+        private void RefreshMainPlayLists(ref MainWindow main)
+        {
+            main.playLists[Index].AudioList.AddRange(SelectedAudioList); //добавляем песни в плейлист
+            main.PL_ListBox.ItemsSource = new List<PlayList>(main.playLists); //обновляем список плейлистов
+            main.playLists[Index].GetTime();//пересчитываем длительность для плейлиста
+            main.PListInfo.DataContext = null; 
+            main.PListInfo.DataContext = main.playLists[Index]; // обновляем страницу плейлиста
         }
     }
 }
