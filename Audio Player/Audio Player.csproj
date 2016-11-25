@@ -92,6 +92,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="SerializationData.cs" />
     <Page Include="AddAudioWind.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -107,6 +108,7 @@
     <Compile Include="AddAudioWind.xaml.cs">
       <DependentUpon>AddAudioWind.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PagesButtons\AddFolderButtons.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -122,8 +124,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PanelButtons.cs" />
+    <Compile Include="ChangePage.cs" />
+    <Compile Include="Panels\RightPanelButtons.cs" />
+    <Compile Include="Panels\BottomPanelButtons.cs" />
     <Compile Include="PlayList.cs" />
+    <Compile Include="PagesButtons\PlayListInfoButtons.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -161,9 +166,6 @@
     <Resource Include="Resources\NoImg.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\PlayB.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\NextB.png" />
   </ItemGroup>
   <ItemGroup>
@@ -198,6 +200,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\MainPL.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\PlayB.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
