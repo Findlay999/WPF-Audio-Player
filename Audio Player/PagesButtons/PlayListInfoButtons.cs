@@ -58,11 +58,16 @@ namespace Audio_Player
         private void RemovePL_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             SettPopup.IsOpen = false;
-            if (MessageBox.Show("Удалить этот плейлист?", "Подтверждение", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            MyDialogWindow dialog = new MyDialogWindow();
+            dialog.TX.Text = "Удалить этот плейлист?";
+            dialog.Owner = this;
+            dialog.ShowDialog();
+            if (dialog.DialogResult.HasValue && dialog.DialogResult.Value)
             {
                 playLists.Remove((sender as TextBlock).DataContext as PlayList); //удаляем плейлист
                 PL_ListBox.ItemsSource = new List<PlayList>(playLists); //обновляем окно плейлистов
                 SetVisiblePlayListsControl(); //отображаем окно плейлистов
+                CenterAnim(PListControl);
             }
         }
 

@@ -40,22 +40,6 @@ namespace Audio_Player
             CurrentList = mainPL.AudioList;
         }
 
-        private void MyMediaElement_MediaOpened(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                TotalTime = ms.NaturalDuration.TimeSpan;
-                DispatcherTimer timerVideoTime = new DispatcherTimer();
-                timerVideoTime.Interval = TimeSpan.FromSeconds(1);
-                timerVideoTime.Tick += new EventHandler(timer_Tick);
-                timerVideoTime.Start();
-            }
-            catch(Exception d)
-            {
-                MessageBox.Show(d.Message);
-            }
-        }
-
         private void ms_MediaEnded(object sender, RoutedEventArgs e)
         {
             if (RepeatButt.IsChecked == true)
@@ -67,25 +51,6 @@ namespace Audio_Player
             {
                 if (CurrentIndex < CurrentList.Count - 1)
                     ChangeAudio(CurrentList[++CurrentIndex]);
-            }
-        }
-
-        void timer_Tick(object sender, EventArgs e)
-        {
-            if (ms.NaturalDuration.HasTimeSpan && ms.NaturalDuration.TimeSpan.TotalSeconds > 0)
-            {
-                if (TotalTime.TotalSeconds > 0)
-                {
-                    AudioSlider.Value = 10 / TotalTime.TotalSeconds * ms.Position.TotalSeconds;
-                }
-            }
-        }
-
-        private void timeSlider_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            if (TotalTime.TotalSeconds > 0)
-            {
-                ms.Position = TimeSpan.FromSeconds(TotalTime.TotalSeconds * AudioSlider.Value / 10);
             }
         }
 
@@ -123,7 +88,11 @@ namespace Audio_Player
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Сохранить данные?", "Сохранение...", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            MyDialogWindow dialog = new MyDialogWindow();
+            dialog.TX.Text = "Сохранить данные?";
+            dialog.Owner = this;
+            dialog.ShowDialog();
+            if (dialog.DialogResult.HasValue && dialog.DialogResult.Value)
             {
                 SerializeData();
             }
@@ -161,7 +130,12 @@ namespace Audio_Player
             if(!System.IO.File.Exists(audioContext.DirectoryName + "\\" + audioContext.Name))  // проверка наличия файла перед воспроизведением
             {
                 // если такой файл не существует - создается диалоговое окно 
-                if(MessageBox.Show("Этот файл был удален или перемещен...\nУдалить все данные о нем?", "Ошибка", MessageBoxButton.YesNo) == MessageBoxResult.Yes) 
+
+                MyDialogWindow dialog = new MyDialogWindow();
+                dialog.TX.Text = "Этот файл был удален или перемещен... Удалить данные о нем?";
+                dialog.Owner = this;
+                dialog.ShowDialog();
+                if (dialog.DialogResult.HasValue && dialog.DialogResult.Value)
                 {
                     playLists = playLists.Select(x => { x.AudioList = x.AudioList.Where
                         (s => s.Name != audioContext.Name || s.DirectoryName != audioContext.DirectoryName).ToList(); x.GetTime(); return x; }).ToList(); // с списка плейлистов, создаем новый список, в котором не будет такого файла
@@ -177,6 +151,7 @@ namespace Audio_Player
                 else
                 {
                     ChangeAudio(CurrentList[++CurrentIndex]); // воспроизводим следующую песню
+                    return;
                 }
             }
 
@@ -206,12 +181,22 @@ namespace Audio_Player
             }
             BottomInfo.DataContext = audioContext;
         }
-
+        
         private void PL_Click(object sender, MouseButtonEventArgs e)
         {
             SetVisiblePlayListInfo();
+            Bounce(PListInfo, this.ActualWidth, this.ActualHeight);
             PListInfo.DataContext = null;
             PListInfo.DataContext = (sender as Border).DataContext;
         }
+
+        public void Bounce(Grid elem, double mainWin_ActW, double mainWin_ActH)
+        {
+            ThicknessAnimation Anim = new ThicknessAnimation();
+            Anim.From = new Thickness(0, -elem.ActualHeight, 0, 0);
+            Anim.To = new Thickness(0);
+            elem.BeginAnimation(MarginProperty, Anim);
+        }
+
     }
 }

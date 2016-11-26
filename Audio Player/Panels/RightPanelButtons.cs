@@ -27,13 +27,22 @@ namespace Audio_Player
         private void ShowLists_Click(object sender, RoutedEventArgs e)
         {
             SetVisiblePlayListsControl();
-            OpacityAnim(PListControl, sender);
+            CenterAnim(PListControl);
         }
 
         private void AddToFolder_Click(object sender, RoutedEventArgs e)
         {
             SetVisibleFolderAdder();
             RideAnim(AddFolder, sender);
+        }
+
+
+        private void CenterAnim(Grid elem)
+        {
+            ThicknessAnimation Anim = new ThicknessAnimation();
+            Anim.From = new Thickness(-this.ActualWidth + 50, 0, 0, 0);
+            Anim.To = new Thickness(0);
+            elem.BeginAnimation(MarginProperty, Anim);
         }
 
         private void OpacityAnim(Grid elem, object sender)

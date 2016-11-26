@@ -54,8 +54,7 @@ namespace Audio_Player
 
             AddNewPlaylist(ref main);
             SetVisibility(ref main);
-            AnimatedPlayListInfo(ref main);
-            
+            main.Bounce(main.PListInfo, main.ActualWidth, main.ActualHeight);
             this.Close();
         }
 
@@ -84,16 +83,7 @@ namespace Audio_Player
             main.PListControl.Visibility = Visibility.Collapsed;
             main.AddFolder.Visibility = Visibility.Collapsed;
             main.PlayGrid.Visibility = Visibility.Collapsed;
-        }
-
-        private void AnimatedPlayListInfo(ref MainWindow main)
-        {
             main.Opacity = 1;
-            DoubleAnimation Anim = new DoubleAnimation();
-            Anim.From = 0;
-            Anim.To = 1;
-            Anim.Duration = new Duration(TimeSpan.FromSeconds(2));
-            main.PListInfo.BeginAnimation(OpacityProperty, Anim);
         }
     }
 }

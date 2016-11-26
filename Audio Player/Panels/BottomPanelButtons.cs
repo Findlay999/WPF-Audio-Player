@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
+using System.Windows.Threading;
+using System.Windows.Input;
 using System.Windows.Controls;
 
 namespace Audio_Player
@@ -47,6 +49,44 @@ namespace Audio_Player
             CurrentList = CurrentList.OrderBy(x => x != CurrentList[CurrentIndex] ? rand.Next() : 0).ToList(); //перемешиваем песни
             Play.ItemsSource = CurrentList; // обновляем список песен
             CurrentIndex = 0; //для воспроизведения с начала
+        }
+
+
+        //Слайдер
+        private void MyMediaElement_MediaOpened(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                TotalTime = ms.NaturalDuration.TimeSpan; 
+                DispatcherTimer timerVideoTime = new DispatcherTimer();
+                timerVideoTime.Interval = TimeSpan.FromSeconds(1);
+                timerVideoTime.Tick += new EventHandler(timer_Tick);
+                timerVideoTime.Start();
+            }
+            catch (Exception d)
+            {
+                MessageBox.Show(d.Message);
+            }
+        }
+
+        private void timeSlider_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (TotalTime.TotalSeconds > 0)
+            {
+                ms.Position = TimeSpan.FromSeconds(TotalTime.TotalSeconds * AudioSlider.Value / 10);
+            }
+        }
+
+
+        void timer_Tick(object sender, EventArgs e)
+        {
+            if (ms.NaturalDuration.HasTimeSpan && ms.NaturalDuration.TimeSpan.TotalSeconds > 0)
+            {
+                if (TotalTime.TotalSeconds > 0)
+                {
+                    AudioSlider.Value = 10 / TotalTime.TotalSeconds * ms.Position.TotalSeconds;
+                }
+            }
         }
 
     }
