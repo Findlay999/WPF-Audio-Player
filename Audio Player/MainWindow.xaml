@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Audio_Player" x:Name="window"
         x:Class="Audio_Player.MainWindow"
         mc:Ignorable="d"
-        Title="Player" MinHeight="535" MinWidth="520" SizeChanged="Window_SizeChanged" Closing="Window_Closed">
+        Title="Player" MinHeight="500" MinWidth="520" SizeChanged="Window_SizeChanged" Closing="Window_Closed">
 
     <Window.Resources>
 
